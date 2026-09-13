@@ -33,6 +33,15 @@ def main():
         print("警告：带 WEAK/FAIL 交付（--force）；验收报告与成品 README 须写明")
     out = dest or os.path.join(P, "product", box)
     if os.path.exists(out):
+        # 全链路唯一一处会删使用者数据的代码。只允许覆盖两种目录：空目录，或上一次 deliver 的成品
+        # （指纹 = 同时有 README.md 与 skills/）。别的一律拒绝，不替使用者删来历不明的目录。
+        if not os.path.isdir(out):
+            C.die(f"--dest 指向的不是目录：{out}")
+        rest = [e for e in os.listdir(out) if e != ".DS_Store"]
+        looks_product = os.path.isdir(os.path.join(out, "skills")) and os.path.isfile(os.path.join(out, "README.md"))
+        if rest and not looks_product:
+            C.die(f"{out} 已有内容，且不像上一次交付的成品（缺 README.md 或 skills/）。\n"
+                  f"换一个空目录，或自己先清空——deliver 不替你删来历不明的目录。")
         shutil.rmtree(out)
     shutil.copytree(draft, os.path.join(out, "skills"))
     fc = os.path.join(C.SKILL_DIR, "assets", "fact_check.py")
