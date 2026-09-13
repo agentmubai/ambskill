@@ -44,10 +44,6 @@
 
 README 由 `assets/product-readme.md` 填槽生成；市场文件由 `assets/marketplace.json` 填 plugins 生成。这里不重复。
 
-## 示例
-
-开源版不附真实工程摘录。
-
 ## 常见失误
 
 - 手改成品里的 SKILL.md：下次 deliver 会被草稿覆盖。改草稿，重新 deliver。
