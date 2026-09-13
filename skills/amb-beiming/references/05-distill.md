@@ -49,10 +49,6 @@
 
 methods.md / layers.md / cards.md 的结构分别由 `assets/prompts/distill-pack.md`、`distill-layers.md`、`distill-cards.md` 规定；case_map.md 是三列表 `| unit_id | 模块 | 为什么 |`。这里不重复。
 
-## 示例
-
-开源版不附真实工程摘录。
-
 ## 常见失误
 
 - 没跑 screen 就派 layers：子代理没有候选，自己造道。

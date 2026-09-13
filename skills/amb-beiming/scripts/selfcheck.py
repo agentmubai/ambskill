@@ -7,7 +7,7 @@
   3 禁词       无工程代号、无过程角色词、无虚构人名；层名不用"心法/公理"
   4 语料泄漏   --corpus 给定时，references/assets 的 .md 里不出现语料的 30 字连续片段（抽样：每 120 字取一个 30 字窗口，不是逐字全扫）
   5 槽位契约   assets/prompts/*.md 的每个 ${槽位} 至少有一个脚本填它，且填它的脚本里出现该槽位名（不核脚本多填的槽位）
-  6 节序       references/01–09 按 目标与产出 → 动作 → 规则 → 依据 → 示例 → 常见失误 排（模板节可选）
+  6 节序       references/01–09 按 目标与产出 → 动作 → 规则 → 依据 → 常见失误 排（模板节可选）
   7 编译       scripts/*.py 与 assets/fact_check.py 都能 py_compile
   8 体积       总字节与各文件行数；SKILL.md > 300 行、总量 > 250KB 提醒（不算失败）
 退出码：1–7 任一失败为 1。"""
@@ -17,7 +17,7 @@ import _core as C
 
 BANNED = [r"[首二三四]炉", r"第[一二三四]炉", r"两炉", r"回炉", r"先例", r"炼成", r"炼器", r"练器", r"主代理", r"主会话", r"总控", r"马大个", r"老周", r"北冥", r"mubaiskill",
           r"(?m)^#+\s*(心法|公理)", r"(心法|公理)层", r"(?<![\w-])workspace/", r"/Users/", r"/home/", r"[A-Za-z]:\\\\"]
-SECTIONS = ["目标与产出", "动作", "规则", "依据", "示例", "常见失误"]
+SECTIONS = ["目标与产出", "动作", "规则", "依据", "常见失误"]
 
 def main():
     pos, o, f = C.parse_args(sys.argv[1:], opts=("--corpus", "--skill"), usage="用法：selfcheck.py [--corpus 语料目录] [--skill 目录]")
