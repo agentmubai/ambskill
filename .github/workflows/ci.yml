@@ -1,0 +1,36 @@
+name: 自检
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 用 3.9 跑，顺带验证「只要 Python 3.9+ 标准库」这句承诺没被 3.10+ 语法破坏
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: 编译全部脚本
+        run: python3 -m compileall -q skills/amb-beiming/scripts skills/amb-beiming/assets
+
+      - name: 母技能自检（死链 / 本机路径 / 禁词 / 语料泄漏 / 提示词槽位 / 节序 / 体积）
+        run: python3 skills/amb-beiming/scripts/selfcheck.py
+
+      - name: workspace 不得进 Git
+        run: |
+          if git ls-files | grep -q '^workspace/'; then
+            echo "::error::workspace/ 下有文件被 Git 跟踪，客户语料可能外泄"
+            git ls-files | grep '^workspace/'
+            exit 1
+          fi
+          echo "workspace/ 下被跟踪的文件数：0"

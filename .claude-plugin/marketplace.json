@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "agentmubai 的 Agent 技能集合。当前收录 amb-beiming：把成批语料做成可溯源的技能工具箱。",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -14,7 +14,7 @@
       "description": "把一位作者的真实语料（课程转写、访谈、作品、短分享）做成一套可溯源的技能工具箱：原子库 + 知识包 + N 个任务技能 + 路由器。也用于给已有工具箱补新料，或把别人的 skill 改造成可溯源的形态。",
       "source": "./skills/amb-beiming",
       "strict": false,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "agentmubai",
         "url": "https://github.com/agentmubai"
