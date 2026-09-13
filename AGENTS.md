@@ -12,7 +12,7 @@
 - `skills/` 只放本仓库维护、准备公开的技能源码。当前公开技能是 `skills/amb-beiming/`，`SKILL.md` 的 `name`、目录名、插件名都是 `amb-beiming`。
 - 客户语料、蒸馏过程、测试和成品留在 `workspace/<项目名>/`，不自动升为根 `skills/` 里的源码，也不自动装进任何宿主发现目录。
 - `README.md`、`AGENTS.md`、`.gitignore`、`.claude-plugin/marketplace.json` 随仓库进入 Git。
-- `workspace/` 只将 `workspace/.gitkeep` 纳入 Git，其余由 `.gitignore` 排除。干净克隆不含本机材料。
+- `workspace/` 整个目录不进 Git（`.gitignore` 里是 `/workspace/`），一个文件都不传。干净克隆里没有这个目录，用的人自己建。
 - 本机缓存、虚拟环境、凭据和本地发现入口不进入 Git。
 - 改 `amb-beiming` 源码前，设计层先给用户看方案，机械改动直接做。改完跑 `python3 skills/amb-beiming/scripts/beiming.py selfcheck`。
 - 未经用户明确要求，不向根 `skills/` 或任何宿主技能目录复制、链接生成物。
