@@ -1,0 +1,85 @@
+{
+ "skill_name": "amb-beiming",
+ "queries": [
+  {
+   "query": "把这 30 节课的转写稿做成一套 skill",
+   "should_trigger": true
+  },
+  {
+   "query": "从我老师的访谈里萃取方法论，做成能用的 agent 技能",
+   "should_trigger": true
+  },
+  {
+   "query": "帮我把这些文章蒸馏成一个工具箱，以后写东西按他的方法来",
+   "should_trigger": true
+  },
+  {
+   "query": "这个 skills 目录是别人做的，改造成能溯源到原话的版本",
+   "should_trigger": true
+  },
+  {
+   "query": "给已有的工具箱加一批新课，只更新受影响的部分",
+   "should_trigger": true
+  },
+  {
+   "query": "我有一堆播客文字稿，想做成按任务分的技能，每条判断能查到出处",
+   "should_trigger": true
+  },
+  {
+   "query": "用 amb-beiming 处理 ./corpus",
+   "should_trigger": true
+  },
+  {
+   "query": "接手这个 workspace 工程，看看做到哪了",
+   "should_trigger": true
+  },
+  {
+   "query": "语料萃取的规则冻结了吗？能全量跑吗",
+   "should_trigger": true
+  },
+  {
+   "query": "对新版成品和裸模型做一次盲评",
+   "should_trigger": true
+  },
+  {
+   "query": "帮我写一篇公众号文章",
+   "should_trigger": false
+  },
+  {
+   "query": "把这份 PDF 转成 markdown",
+   "should_trigger": false
+  },
+  {
+   "query": "总结一下这节课讲了什么",
+   "should_trigger": false
+  },
+  {
+   "query": "给我写一个通用的写作提示词",
+   "should_trigger": false
+  },
+  {
+   "query": "把这段话翻译成英文",
+   "should_trigger": false
+  },
+  {
+   "query": "做一个 skill 教 agent 用 git",
+   "should_trigger": false
+  },
+  {
+   "query": "这份合同有什么风险",
+   "should_trigger": false
+  },
+  {
+   "query": "帮我排版这篇稿子",
+   "should_trigger": false
+  },
+  {
+   "query": "把视频转成文字",
+   "should_trigger": false
+  },
+  {
+   "query": "写一个 Python 脚本统计词频",
+   "should_trigger": false
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+# 本机项目工作区：只跟踪目录占位，不上传任何项目内容
+/workspace/*
+!/workspace/.gitkeep
+
+# 本机技能发现入口与环境配置
+/.agents/
+/.claude/
+/.codex/
+/.workbuddy/
+.env
+.env.*
+!.env.example
+
+# 缓存与本地运行环境
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/

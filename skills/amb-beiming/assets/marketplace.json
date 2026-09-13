@@ -1,0 +1,11 @@
+{
+ "name": "toolbox-name",
+ "owner": {
+  "name": "toolbox-owner"
+ },
+ "metadata": {
+  "description": "由 amb-beiming 从真实语料蒸馏出的技能工具箱；plugins 列表由 deliver --plugin 按成品目录生成",
+  "version": "1.0.0"
+ },
+ "plugins": []
+}
