@@ -185,6 +185,14 @@ def sha_files(paths, root=None):
             h.update(rel.replace(os.sep, "/").encode("utf-8")); h.update(open(p, "rb").read())
     return h.hexdigest()[:16]
 
+def layers_inputs(P, tid):
+    """check_layers:<tid> 的输入清单，check_layers / compose / status 共用一份，避免三处漂移。
+    cards.md 必须在内：卡是在 layers 核过之后才生成的，不把它算进哈希，就会出现
+    「check-layers 通过 → 再写 cards.md → 记录仍是 ok」，卡里的引文一辈子不被核。
+    cards.md 不存在时 sha_files 自动跳过；卡一旦出现或改动，记录立刻变 stale。"""
+    pk = W(P, "kb", "packs", tid)
+    return [os.path.join(pk, "layers.md"), os.path.join(pk, "cards.md"), W(P, "kb", "pools", tid, "atoms.jsonl")]
+
 def record_stage(P, stage, inputs, ok=True, extra=None):
     meta = read_json(W(P, "meta.json"), {})
     meta[stage] = {"at": now(), "ok": bool(ok), "inputs_sha": sha_files(inputs, P), **(extra or {})}

@@ -121,14 +121,14 @@ def assess(P):
             for f in ("methods.md", "case_map.md", "layers.md", "cards.md"):
                 if not has(os.path.join(pk, f)):
                     missing.append(f"{t['id']}/{f}")
-            st = C.stage_state(P, f"check_layers:{t['id']}", [os.path.join(pk, "layers.md"), W("kb", "pools", t["id"], "atoms.jsonl")])
+            st = C.stage_state(P, f"check_layers:{t['id']}", C.layers_inputs(P, t["id"]))
             if st != "ok":
                 bad.append(f"{t['id']}:{st}")
         idx = C.stage_state(P, "index", [os.path.join(W("kb", "packs", t["id"]), f) for t in T for f in ("methods.md", "cards.md", "layers.md")])
         if missing and len(missing) == 4 * len(T):
-            row("S5", "未开始", "无知识包", "beiming.py distill all --step pack → 派子代理 → caselib → screen → distill --step layers → check-layers → distill --step cards → index")
+            row("S5", "未开始", "无知识包", "beiming.py distill all --step pack → 派子代理 → caselib → screen → distill --step layers → check-layers → distill --step cards → 派 → 再跑一次 check-layers（核卡里的引文）→ index")
         elif missing or bad or idx != "ok":
-            row("S5", "进行中", f"缺 {'、'.join(missing[:6]) or '无'}{'…' if len(missing) > 6 else ''}；六层核对 {'、'.join(bad) or '全过'}；index {idx}", "按缺的补：pack→caselib→screen→layers→check-layers→cards→index")
+            row("S5", "进行中", f"缺 {'、'.join(missing[:6]) or '无'}{'…' if len(missing) > 6 else ''}；六层核对 {'、'.join(bad) or '全过'}；index {idx}", "按缺的补：pack→caselib→screen→layers→check-layers→cards→check-layers（核卡）→index")
         else:
             row("S5", "完成", "各任务知识包齐、六层逐字核对通过、索引已建", "")
     # S6
