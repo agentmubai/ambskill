@@ -7,7 +7,7 @@
   PASS  其余：差距 ≥ 1 且 原法忠实 ≥ 3.5 且 反转与近邻的方法选择 ≥ 3 且 成品可用 ≥ 3
   路由器：每题方法选择均分 ≥ 4 为 PASS；有一题在 3–4 之间 WEAK；有一题 < 3 FAIL
 只有一个来源时不判 PASS，只列分（无对照看不出增量）。"""
-import os, sys, re, collections
+import os, sys, collections
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _core as C
 
@@ -28,10 +28,11 @@ def main():
     S = C.read_json(sj); rows = S["rows"]
     if not S.get("complete", False) or S.get("problems"):
         C.die("scores.json 标记矩阵不完整：\n" + "\n".join(f"- {p}" for p in S.get("problems", [])) + "\n不出判定；补齐后重跑 tally")
+    import blind_eval  # 与 tally 共用同一套题集解析：旧的 split("\n## ") 会吞掉首行就是 ## 的第一个任务
     qkind = {}
-    for block in C.read_text(qp).split("\n## ")[1:]:
-        for q, k in re.findall(r"(?m)^- (Q\d+)\s+([^：:\n]+)[：:]", block):
-            qkind[q] = k.strip()
+    for _tid, _qs in blind_eval.parse_questions(qp)[0].items():
+        for _q, _k, _t in _qs:
+            qkind[_q] = _k
     tasks = collections.OrderedDict(); srcs = []
     for r in rows:
         tasks.setdefault(r["task"], []).append(r)
@@ -66,8 +67,10 @@ def main():
                 else:
                     if abs(delta) < 1: reasons.append(f"差距 {delta:.2f} < 1 不解读")
                     if dims["原法忠实"] < 3.5: reasons.append(f"原法忠实 {dims['原法忠实']:.2f} < 3.5")
-                    if flip is not None and flip < 3: reasons.append(f"反转题方法选择 {flip:.2f} < 3")
-                    if nb is not None and nb < 3: reasons.append(f"近邻题方法选择 {nb:.2f} < 3")
+                    if flip is None: reasons.append("题集里没有反转题，该门槛未应用")
+                    elif flip < 3: reasons.append(f"反转题方法选择 {flip:.2f} < 3")
+                    if nb is None: reasons.append("题集里没有近邻题，该门槛未应用")
+                    elif nb < 3: reasons.append(f"近邻题方法选择 {nb:.2f} < 3")
                     if dims["成品可用"] < 3: reasons.append(f"成品可用 {dims['成品可用']:.2f} < 3")
                     verdict = "WEAK" if reasons else "PASS"
                 why = "；".join(reasons) or "五项门槛全过"
