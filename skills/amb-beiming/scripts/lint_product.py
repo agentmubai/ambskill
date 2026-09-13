@@ -51,6 +51,10 @@ def check_skill(skills_dir, d, is_router, all_dirs, P=None, tid=None):
         res.append(("Phase 里点名了 references 的模块号或案例卡 id", bool(re.search(r"references/methods\.md\s*M\d|references/cases\.md\s*u\d", s))))
         res.append(("器：有事实清单", bool(re.search(r"(?m)^##+\s*器?[·、]?\s*事实清单", s))))
         res.append(("器：有逐句来源表 / 事实核对", bool(re.search(r"逐句来源表|fact_check", s))))
+        res.append(("交付纪律写明默认只交一版", bool(re.search(r"默认只交一版|默认交一版|只交一版", s))))
+        # 前面加了"不/别/不要"的是正确表述（规约原话就是"不并排给两版"），不能算违规
+        res.append(("没把「并排两版」当默认动作", not re.search(r"(?<![不别])(?<!不要)(?:并排给两版|并列给两版|同时给出两版)", s)))
+        res.append(("器：核对写明是交付前自查、不进交给使用者的正文", bool(re.search(r"不进交给使用者的正文|不进正文|交付前自查", s))))
         res.append(("势：有一节（可写「无」）", bool(re.search(r"(?m)^##+\s*势", s))))
         res.append(("有「本任务不判的问题」一节", bool(re.search(r"(?m)^##+\s*本任务不判", s))))
         nj = next((b for b in secs if b.startswith("本任务不判")), "")
