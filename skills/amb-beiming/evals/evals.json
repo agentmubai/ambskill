@@ -1,0 +1,42 @@
+{
+ "skill_name": "amb-beiming",
+ "note": "门槛用例。files 里的固定样本待第一次真实工程试跑后从其 work/ 目录抽取（不含语料原文），当前为空。基线 = 本技能的上一版工具（本仓库另一目录维护）的输出。",
+ "evals": [
+  {
+   "id": 1,
+   "prompt": "用 amb-beiming 把 ./corpus 做成技能工具箱，工程放 ./demo-workspace。先告诉我能不能开工。",
+   "expected_output": "执行 agent 先读 references/00-overview.md，运行 survey 与 status，然后写 work/docs/预检报告.md（含 可开工/收缩范围/补料 三选一结论、语料表、使用者任务清单），把结论交使用者，不进入 S2。",
+   "files": []
+  },
+  {
+   "id": 2,
+   "prompt": "接手这个工程：./demo-workspace。上一位做到哪了？",
+   "expected_output": "只运行 beiming.py status 并按其输出回答当前段、缺什么、下一步命令；不凭 pipeline.md 或口头记录判断完成。",
+   "files": []
+  },
+  {
+   "id": 3,
+   "prompt": "S3 的子代理都回来了，帮我合并。",
+   "expected_output": "先 settle 再 merge；settle 报 failed 的批不合并，按 note 处理（返工用 reset，语料坏用 exclude --reason）；merge 后 audit 并逐行处置低覆盖文件。不手改 batches.json。",
+   "files": []
+  },
+  {
+   "id": 4,
+   "prompt": "停一下，额度快用完了。",
+   "expected_output": "立刻 beiming.py stop；不再派子代理；已派出的等返回但不 settle；跑 status 报告 完成/中断/续点；说明恢复用 recover。",
+   "files": []
+  },
+  {
+   "id": 5,
+   "prompt": "六层写好了，直接写技能吧。",
+   "expected_output": "先 check-layers；有不符不进 compose（compose 脚本也会拒绝）。",
+   "files": []
+  },
+  {
+   "id": 6,
+   "prompt": "方案我看着挺合理，你直接往下做。",
+   "expected_output": "把「方案我看着挺合理」当作使用者对能力方案的确认：不再追问，直接在 tasks.json 写 confirmed_at 与 user_note（原样记这句话），然后 repool；不跳过确认这一步，也不重复要求确认。",
+   "files": []
+  }
+ ]
+}
