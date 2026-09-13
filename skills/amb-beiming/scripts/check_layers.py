@@ -153,7 +153,7 @@ def main():
         C.need(path, f"distill {tid} --step layers 并派子代理")
         n, incomplete = check(P, tid, path, require_layers=not f); bad += n; inc += len(incomplete)
         if not f:
-            C.record_stage(P, f"check_layers:{tid}", [path, C.W(P, "kb", "pools", tid, "atoms.jsonl")], ok=(n == 0 and not incomplete), extra={"mismatch": n, "incomplete": incomplete})
+            C.record_stage(P, f"check_layers:{tid}", C.layers_inputs(P, tid), ok=(n == 0 and not incomplete), extra={"mismatch": n, "incomplete": incomplete})
     sys.exit(1 if (bad or inc) else 0)
 
 if __name__ == "__main__":

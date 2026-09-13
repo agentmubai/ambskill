@@ -55,9 +55,10 @@ def main():
     else:
         for tid in C.split_names(pos[0], [t["id"] for t in T["tasks"]]):
             t = C.task_by_id(P, tid); pack = C.W(P, "kb", "packs", tid)
-            st = C.stage_state(P, f"check_layers:{tid}", [os.path.join(pack, "layers.md"), C.W(P, "kb", "pools", tid, "atoms.jsonl")])
+            st = C.stage_state(P, f"check_layers:{tid}", C.layers_inputs(P, tid))
             if st != "ok":
-                C.die(f"{tid} 的六层核对状态是 {st}：先 `beiming.py check-layers {tid}` 通过再成技")
+                C.die(f"{tid} 的六层核对状态是 {st}：先 `beiming.py check-layers {tid}` 通过再成技"
+                      + ("（cards.md 在核对之后才写或又改过，卡里的引文还没核）" if st == "stale" else ""))
             sd = os.path.join(draft, f"{prefix}-{tid}"); sync_refs(P, tid, sd); rd = os.path.join(sd, "references")
             neighbors = "\n".join(f"- `../{prefix}-{x['id']}/SKILL.md`（{x.get('name','')}）：{x.get('judge','')}" for x in T["tasks"] if x["id"] != tid) or "- （只有这一个任务）"
             slots = {"project": P, "skill_dir": C.SKILL_DIR, "task": tid, "domain": t.get("domain", t.get("name", tid)), "prefix": prefix,
