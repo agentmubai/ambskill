@@ -130,6 +130,7 @@ ambskill/
 ├── skills/
 │   └── amb-beiming/        语料 → 技能工具箱（SKILL.md + references + scripts + assets + evals）
 ├── .claude-plugin/         Claude Code 插件市场定义
+├── docs/                   README 里用到的图片（社群二维码）
 ├── README.md               本文件
 ├── AGENTS.md               仓库与协作约定
 └── LICENSE
@@ -142,11 +143,9 @@ ambskill/
 作者：[agent沐白](https://github.com/agentmubai)
 <!-- 待填：拿到后补成 作者：[agent沐白](https://github.com/agentmubai) · [小红书](…) · [视频号](…) · [公众号](…) -->
 
-如需加入 **沐白 · Agent 实战社群**（付费），可扫码或打开 〔待填：社群说明文章链接，微信公众号文章〕。
+如需加入 **沐白 · Agent 实战社群**（付费），可扫码或打开[《加入沐白的 Agent 实战社群》](https://mp.weixin.qq.com/s/BnQZmkb_p_LvJvKr6Dm-Sg)。
 
-<!-- 二维码做好后放到 docs/paid-qa-group-qrcode.png（需新建 docs/ 目录），然后删掉下面一行首尾的注释标记让图片显示：
-![沐白 · Agent 实战社群二维码](docs/paid-qa-group-qrcode.png)
--->
+<img src="docs/paid-qa-group-qrcode.png" alt="沐白 · Agent 实战社群二维码" width="180">
 
 ## 许可证
 
