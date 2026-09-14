@@ -32,7 +32,7 @@
 内层（可观察）：
 1. 每个 Phase 都有成立 / 不成立两个分支。
 2. 引用块原话逐字且带原子 id。
-3. `references/methods.md` 的 M 号与 `references/cases.md` 的 u 号被点名合计 ≥ 3 处，其中案例卡 ≥ 1；lint 按同一口径查，全 PASS。
+3. `references/methods.md` 的 M 号与 `references/cases.md` 的 u 号被点名合计 ≥ 3 处，其中案例卡 ≥ 1（tasks.json 标了 `no_case` 的任务改为：写明「本任务无现场案例」且不引 cases.md）；lint 按同一口径查，全 PASS。
 
 为什么这样定：
 - 禁"按需读取"：它把"读什么"的决定交给运行时的模型，结果不是整读就是跳过；按编号点名把决定留在写技能的时候。

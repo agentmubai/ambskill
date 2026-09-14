@@ -64,7 +64,9 @@ def main():
             slots = {"project": P, "skill_dir": C.SKILL_DIR, "task": tid, "domain": t.get("domain", t.get("name", tid)), "prefix": prefix,
                      "skill_name": f"{prefix}-{tid}", "skill_dir_out": os.path.relpath(sd, P), "refs_dir": os.path.relpath(rd, P),
                      "pool_dir": os.path.relpath(C.W(P, "kb", "pools", tid), P), "spec_path": os.path.relpath(spec, P), "plan_path": "work/docs/能力方案.md",
-                     "neighbors": neighbors, "report_out": f"work/reports/compose-{tid}.md"}
+                     "neighbors": neighbors, "report_out": f"work/reports/compose-{tid}.md",
+                     "no_case_note": ("\n- **本任务无现场案例**（tasks.json 标了 no_case）：知识包里没有案例卡。在「证」处如实写「本任务无现场案例，判断依据全部回到 references/methods.md 的模块」；不要编案例，不要引 `references/cases.md`。"
+                                      if t.get("no_case") else "")}
             outs.append(C.fill_prompt("compose-skill", slots, f"compose-{tid}", P))
     print(f"生成 {len(outs)} 份提示词：")
     for x in outs:

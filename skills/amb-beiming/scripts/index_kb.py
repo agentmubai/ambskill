@@ -38,8 +38,8 @@ def main():
         lay = os.path.join(pack, "layers.md"); dao = len(re.findall(r"(?m)^###\s", re.split(r"(?m)^##\s+", C.read_text(lay))[1] if os.path.exists(lay) and len(re.split(r"(?m)^##\s+", C.read_text(lay))) > 1 else ""))
         pool = C.W(P, "kb", "pools", t["id"], "atoms.jsonl"); n = len(C.read_jsonl(pool)) if os.path.exists(pool) else 0
         inputs += [os.path.join(pack, f) for f in ("methods.md", "cards.md", "layers.md")]
-        cl = C.stage_state(P, f"check_layers:{t['id']}", [lay, pool])
-        for cond, msg in ((not ms, "methods.md 没有 M 编号模块"), (not cs, "cards.md 没有案例卡"), (dao == 0, "layers.md 道为 0 条"), (n == 0, "任务池为空"), (cl != "ok", f"check-layers 记录 {cl}")):
+        cl = C.stage_state(P, f"check_layers:{t['id']}", C.layers_inputs(P, t["id"]))
+        for cond, msg in ((not ms, "methods.md 没有 M 编号模块"), (not cs and not t.get("no_case"), "cards.md 没有案例卡（语料里真没案例就在 tasks.json 给该任务标 no_case:true）"), (dao == 0, "layers.md 道为 0 条"), (n == 0, "任务池为空"), (cl != "ok", f"check-layers 记录 {cl}")):
             if cond:
                 problems.append(f"{t['id']}: {msg}")
         L.append(f"| {t['id']} | {t.get('name','')} | {len(ms)} | {len(cs)} | {dao} | {n} |")
