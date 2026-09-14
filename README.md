@@ -89,6 +89,8 @@ claude plugin marketplace update ambskill
 claude plugin update amb-beiming@ambskill
 ```
 
+更新完在已开着的 Claude Code 会话里执行 `/reload-plugins`（或重开会话），新版本才生效。
+
 更新换的是宿主技能目录里的技能源码。蒸馏工程在你自己的 `<项目>-workspace/` 下，与技能目录是两个地方，语料、中间物和成品都不在更新范围内。
 
 ## ambskill 怎样工作
