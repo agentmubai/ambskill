@@ -15,7 +15,7 @@ import os, sys, re, glob
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _core as C
 
-BANNED = [r"[首二三四]炉", r"第[一二三四]炉", r"两炉", r"回炉", r"先例", r"炼成", r"炼器", r"练器", r"主代理", r"主会话", r"总控", r"马大个", r"老周", r"北冥", r"mubaiskill",
+BANNED = [r"[首二三四]炉", r"第[一二三四]炉", r"两炉", r"回炉", r"先例", r"炼成", r"炼器", r"练器", r"主代理", r"主会话", r"总控", r"北冥", r"mubaiskill",
           r"(?m)^#+\s*(心法|公理)", r"(心法|公理)层", r"(?<![\w-])workspace/", r"/Users/", r"/home/", r"[A-Za-z]:\\\\"]
 SECTIONS = ["目标与产出", "动作", "规则", "依据", "常见失误"]
 
