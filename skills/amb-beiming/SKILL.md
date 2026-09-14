@@ -19,7 +19,7 @@ description: 把一位作者的真实语料（课程转写、访谈、作品、�
 
 | 段 | 目标 | 你跑的命令（顺序） | 派子代理 | 门槛（status 判"完成"的依据） | 详见 |
 |---|---|---|---|---|---|
-| S1 盘点 | 能开工吗、做出什么 | 向使用者要语料目录与"平时要做的事"清单 → `survey --corpus <目录> --project <项目>-workspace`（建工程）→ 核形态 → 写 `work/docs/预检报告.md` 与 `候选任务草案.md` | 无 | catalog / batches 在；预检报告含 可开工 / 收缩范围 / 补料 | 01-survey.md |
+| S1 盘点 | 能开工吗、做出什么 | 向使用者要语料目录，并问一句"你想拿它具体做什么"（粗方向即可，**不要求清单**）→ `survey --corpus <目录> --project <项目>-workspace`（建工程）→ 核形态 → 写 `work/docs/预检报告.md` 与 `候选任务草案.md` | 无 | catalog / batches 在；预检报告含 可开工 / 收缩范围 / 补料 | 01-survey.md |
 | S2 试点 | 规则调到连续两批不改，冻结 | `pilot <b,b>`（要求预检报告已有三选一结论，否则拒绝；首次生成 `work/docs/执行提示词.md`，先填它第 6 节的白名单）→ 派 → `settle --pilot` → `read <b> --sample` → `calibrate` → 派 → 再试或冻结：把执行提示词第 3 行的版本行整行改成「版本：冻结 vX.Y」→ `settle --pilot --accept`（把 done 的试点批搬进 parts） | 每批 1；校准 1 | 执行提示词有独立成行的「版本：冻结 vX.Y」（说明句不算）；试点批全部 pilot-accepted；加工样品在 | 02-pilot.md |
 | S3 萃取 | 全量抽成档案层 | `extract`（未冻结 / 缺加工样品 / 试点批未接纳 都会被拒，退出码 2；`--force` 越过并记 pipeline）→ 派 → `settle` → `read all --sample` → `merge` → `audit` → 处置低覆盖；要返工的批 `reset <b>` 后重抽，语料本身坏的 `exclude <b> --reason` | 每批 1 | 无未完成批；merge / audit 通过且未过期；折损待处置为 0 | 03-extract.md |
 | S4 方案 | 定任务，分池 | `plan` → 派（或自写）→ **使用者确认** → 写 `work/tasks.json` → `repool` | 1 | tasks.json 含 confirmed_at；repool 无无处归 | 04-plan.md |
