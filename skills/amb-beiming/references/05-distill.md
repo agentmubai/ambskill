@@ -16,7 +16,7 @@
 4. `beiming.py distill <任务> --step layers` → 派子代理写 layers.md（只能从候选里选原话）。
 5. `beiming.py check-layers <任务>`：逐字核对道/术/势，并核标了原子 id 的原话确实属于那条 id（"原话曾存在"与"出处写对"是两回事）；cards.md 已在时也核卡里标 unit_id 的引文是不是该单元 text 的逐字子串；道或术 0 条、任务池为空都记未完成，不算通过。不过 → 把 `mismatch.md` 交回子代理改，再核，直到 0。
 6. `beiming.py distill <任务> --step cards` → 派子代理写 cards.md → 再跑一次 `check-layers <任务>`（核卡里的引文）。
-7. 全部任务做完 `beiming.py index`：每个任务要有 ≥ 1 个 M 模块、≥ 1 张卡、道 ≥ 1 条、check-layers 记录通过，否则索引写出但 S5 不算完成（退出码 1）。
+7. 全部任务做完 `beiming.py index`：每个任务要有 ≥ 1 个 M 模块、≥ 1 张卡（tasks.json 标了 `no_case` 的任务免这一条）、道 ≥ 1 条、check-layers 记录通过，否则索引写出但 S5 不算完成（退出码 1）。
 8. 你抽读每个任务的 layers.md 的道：3–6 条、每条有"它决定了什么"与"没覆盖时怎么推"、原话确实是判断句不是例句。
 
 ## 规则

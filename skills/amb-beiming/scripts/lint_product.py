@@ -61,7 +61,17 @@ def check_skill(skills_dir, d, is_router, all_dirs, P=None, tid=None):
         res.append(("不判清单每条有 带什么去 / 作者判断 / 何时回来", bool(re.search(r"带什么|带.{0,20}去", nj)) and bool(re.search(C.ATOM_ID, nj)) and bool(re.search(r"回到本任务|回来|何时回", nj))))
         res.append(("有「说话风格」一节", bool(re.search(r"(?m)^##+\s*说话风格", s))))
         n_m = len(re.findall(r"methods\.md\s*M\d", s)); n_u = len(re.findall(r"cases\.md\s*u\d", s))
-        res.append(("证：按 id 点名案例卡 ≥ 1 次", n_u >= 1))
+        # tasks.json 标了 no_case 的任务（语料里没有该任务的完整案例）改查是否如实写明；没有工程上下文时按严格口径
+        no_case = False
+        if P is not None and tid:
+            try:
+                no_case = bool(next((x.get("no_case") for x in C.tasks(P)["tasks"] if x["id"] == tid), False))
+            except Exception:
+                no_case = False
+        if no_case:
+            res.append(("证：no_case 任务写明「本任务无现场案例」（不引 cases.md、不编案例）", bool(re.search(r"本任务无现场案例", s)) and n_u == 0))
+        else:
+            res.append(("证：按 id 点名案例卡 ≥ 1 次", n_u >= 1))
         res.append((f"references 按编号点名合计 ≥ 3 处（methods M 号 {n_m} + cases u 号 {n_u}；与 06-compose 规则 3 一致）", n_m + n_u >= 3))
         res.append(("写明 references 按编号定位读取", bool(re.search(r"按编号|按模块号|定位读取", s))))
         rd = os.path.join(skills_dir, d, "references")
