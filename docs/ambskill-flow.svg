@@ -53,7 +53,7 @@
     <rect class="node" width="280" height="112" rx="16"/>
     <text class="index" x="20" y="32">喂</text>
     <text class="label" x="20" y="62">朋友圈、口播</text>
-    <text class="body" x="20" y="88">直播稿、文章</text>
+    <text class="label" x="20" y="88">直播稿、文章</text>
   </g>
   <g transform="translate(388,324)">
     <rect class="node-strong" width="280" height="112" rx="16"/>
