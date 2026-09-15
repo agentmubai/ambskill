@@ -1,22 +1,31 @@
-<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 定位句「当前收录」；② 「解决什么问题」开头段与分界句；③ 导航行末尾加技能说明链接；④ 「解决什么问题」加一张该技能的处境表；⑤ 「快速开始」加一个二级标题；⑥ 「能力一览」加行；⑦ 「怎样工作」加一个二级标题写机制；⑧ 「已知限制」加一组；⑨ 「项目结构」树里 skills/ 下加目录；⑩ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑪ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑫ AGENTS.md 公开技能列表。其余各节不动。 -->
+<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 开篇对照表加一列或改定位句；② 「你什么时候用哪一套」加一张处境表；③ 导航行末尾加技能说明链接；④ 「快速开始」加一个二级标题；⑤ 「能力一览」加行；⑥ 「怎样工作」加一个二级标题写机制；⑦ 「已知限制」加一组；⑧ 「项目结构」树里 skills/ 下加目录；⑨ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑩ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑪ AGENTS.md 公开技能列表；⑫ GitHub About。其余各节不动。 -->
 
 # ambskill
 
-> agent沐白在用的 Agent 技能集合。当前收录两套：`amb-beiming` 把一位作者的成批真实语料，炼成一套能替人做具体任务的技能工具箱；`amb-paoding` 把对方的作品（朋友圈、短视频转写、直播、公众号）拆成写作技能——他怎么看事、每段要达成什么、怎么说。两套技能里引用的每句原话都由脚本逐字核过，改写过的引文进不了下一步；每条判断都能回到出处。
+课炼成分身，作品拆成写法。
 
-**支持：Claude Code、Codex、Cursor、ZCode、Grok CLI、WorkBuddy，以及其他能读 `SKILL.md` 的 Agent。**
+两套开源 Agent 技能，[agent沐白](https://github.com/agentmubai) 自己在用。每句原话由脚本逐字核过——改写过的引文进不了下一步。
 
-ambskill 由 [agent沐白](https://github.com/agentmubai) 创建，收录他自己在用的 Agent 技能。
+| | 北冥 `amb-beiming` | 庖丁 `amb-paoding` |
+| --- | --- | --- |
+| 干什么 | 把一个人炼成能替他判断、做事的分身 | 从一批作品里抽出稳定结构，按那个路数写出一条 |
+| 最好喂 | 课程回放、访谈；有对得上的作品更好 | 大量同形态作品：朋友圈、短视频、直播、公众号 |
+| 别喂这个 | 只有文案、没有方法论 | 要把课炼成判断系统——那是北冥的事 |
+| 你拿走 | 路由器 + 一组任务技能 | 路由器 + 每类一个写作技能 |
 
-[快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [amb-beiming 完整说明](skills/amb-beiming/README.md) · [amb-paoding 完整说明](skills/amb-paoding/README.md)
+装哪套用哪套，互不依赖。同一人、课和作品都有：现在分开炼；以后可以先判断再成稿。
 
-## ambskill 解决什么问题
+**跑在** Claude Code、Codex、Cursor、ZCode、Grok CLI、WorkBuddy，以及其他能读 `SKILL.md` 的 Agent 上。
 
-ambskill 是一个技能集合仓。当前收录两套：`amb-beiming` 与 `amb-paoding`，每套各占 `skills/` 下一个目录，互不依赖，装哪套用哪套；`npx … -g --all` 与 `claude plugin marketplace add` 不变，Claude Code 插件市场里按插件名各装各的。
+[快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
 
-两套的分界一句话：**北冥（amb-beiming）炼的是这个人怎么判断，庖丁（amb-paoding）拆的是这个人怎么写。** 手里是自己的课程、访谈，想做一个替自己做事的分身，用北冥；手里是别人（或自己）的一批作品——朋友圈、短视频转写、直播实录、公众号——想让 Agent 按那个路数替你写一条，用庖丁。
+## 你什么时候用哪一套
 
-下面这些处境，`amb-beiming` 直接对应：
+别人把语料丢给模型，说「学我的风格」。出来的东西像他，细节是编的。
+
+ambskill 不学风格。北冥炼的是这个人怎么判断，庖丁拆的是这个人怎么写。判断挂着出处，写法对着原件。
+
+下面这些处境，用北冥：
 
 | 真实处境 | 你会得到 |
 | --- | --- |
@@ -27,7 +36,7 @@ ambskill 是一个技能集合仓。当前收录两套：`amb-beiming` 与 `amb-
 | 手上有别人写的 skill，判断从哪来说不清 | 有原始语料就重炼成可溯源形态；没有就只做结构改造，并如实告诉你上限在哪 |
 | 不知道做出来的东西到底比直接问模型强多少 | 两个模型评委盲评、三套题集、逐任务 PASS / WEAK / FAIL 的验收报告 |
 
-下面这些处境，`amb-paoding` 直接对应：
+下面这些处境，用庖丁：
 
 | 真实处境 | 你会得到 |
 | --- | --- |
