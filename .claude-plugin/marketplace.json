@@ -5,7 +5,7 @@
     "url": "https://github.com/agentmubai"
   },
   "metadata": {
-    "description": "agent沐白的商业落地技能。课炼成分身，作品拆成写法。北冥：课程与访谈 → IP 分身。庖丁：一批同形态作品 → 写作技能。",
+    "description": "面向创业者与内容创作者的中文 AI Skills 工具箱。帮你做出更好用的 skill，把真实业务、内容与行动用 AI 落地。当前：北冥炼分身，庖丁拆写法。",
     "version": "1.2.0"
   },
   "plugins": [

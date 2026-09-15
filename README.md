@@ -2,11 +2,11 @@
 
 # ambskill
 
-agent沐白的商业落地技能。
+面向创业者与内容创作者的中文 AI Skills 工具箱。
 
-课炼成分身，作品拆成写法。
+帮你做出自己更好用的 skill，把真实的业务、内容和行动用 AI 落地。
 
-两套开源 Agent 技能，[agent沐白](https://github.com/agentmubai) 自己在用。每句原话由脚本逐字核过——改写过的引文进不了下一步。
+当前两套，[agent沐白](https://github.com/agentmubai) 自己在用：课炼成分身，作品拆成写法。每句原话由脚本逐字核过——改写过的引文进不了下一步。
 
 | | 北冥 `amb-beiming` | 庖丁 `amb-paoding` |
 | --- | --- | --- |
