@@ -1,27 +1,28 @@
-<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 开篇对照表加一列或改定位句；② 「解决什么问题」一段人话 + 处境表；能力一览只两行（一套一行）；③ 导航行末尾加技能说明链接；④ 「快速开始」加一个二级标题；⑤ 「能力一览」加行；⑥ 「怎样工作」加一个二级标题写机制；⑦ 「已知限制」加一组；⑧ 「项目结构」树里 skills/ 下加目录；⑨ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑩ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑪ AGENTS.md 公开技能列表；⑫ GitHub About。其余各节不动。 -->
+<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 开篇引用句 / 徽章 / 作者句；对照表在图下方；② 「解决什么问题」一段人话 + 处境表；能力一览只两行（一套一行）；③ 导航行末尾加技能说明链接；④ 「快速开始」加一个二级标题；⑤ 「能力一览」加行；⑥ 「怎样工作」加一个二级标题写机制；⑦ 「已知限制」加一组；⑧ 「项目结构」树里 skills/ 下加目录；⑨ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑩ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑪ AGENTS.md 公开技能列表；⑫ GitHub About。其余各节不动。 -->
 
 # ambskill
 
-面向创业者与内容创作者的中文 AI Skills 工具箱。
+> 面向创业者与内容创作者的中文 AI Skills 工具箱。帮你做出自己更好用的 skill，把真实的业务、内容和行动用 AI 落地。
 
-帮你做出自己更好用的 skill，把真实的业务、内容和行动用 AI 落地。
+[![Version](https://img.shields.io/badge/version-1.2.0-2563EB.svg?style=flat-square)](.claude-plugin/marketplace.json)
+[![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-16A34A.svg?style=flat-square)](LICENSE)
 
-当前两套，[agent沐白](https://github.com/agentmubai) 自己在用：课炼成分身，作品拆成写法。每句原话由脚本逐字核过——改写过的引文进不了下一步。
+**支持：Claude Code、Codex、Cursor、ZCode、Grok CLI、WorkBuddy，以及其他能读 `SKILL.md` 的 Agent。**
+
+ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套他自己在用的技能：北冥把课炼成分身，庖丁把作品拆成写法。每句原话由脚本逐字核过，改写过的引文进不了下一步。
+
+[解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
+
+![ambskill 炼 skill 再落地](docs/ambskill-flow.svg)
 
 | | 北冥 `amb-beiming` | 庖丁 `amb-paoding` |
 | --- | --- | --- |
 | 干什么 | 把一个人炼成能替他判断、做事的分身 | 从一批作品里抽出稳定结构，按那个路数写出一条 |
 | 最好喂 | 课程回放、访谈；有对得上的作品更好 | 大量同形态作品：朋友圈、短视频、直播、公众号 |
 | 别喂这个 | 只有文案、没有方法论 | 要把课炼成判断系统——那是北冥的事 |
-| 你拿走 | 路由器 + 一组任务技能 | 路由器 + 每类一个写作技能 |
+| 你拿走 | 一组任务技能 + 路由器 | 每类一个写作技能 + 路由器 |
 
-装哪套用哪套，互不依赖。同一人、课和作品都有：现在分开炼；以后可以先判断再成稿。
-
-**跑在** Claude Code、Codex、Cursor、ZCode、Grok CLI、WorkBuddy，以及其他能读 `SKILL.md` 的 Agent 上。
-
-[解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
-
-![ambskill 炼 skill 再落地](docs/ambskill-flow.svg)
+装哪套用哪套。同一人、课和作品都有：现在分开炼。
 
 ## ambskill 解决什么问题
 
