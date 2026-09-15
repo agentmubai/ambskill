@@ -13,6 +13,8 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 [解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
 
+![ambskill 两套工具](docs/ambskill-flow.svg)
+
 ## ambskill 解决什么问题
 
 北冥做 IP 分身：帮客户造自己的分身，或把你喜欢的老师、买过的课炼成能辅导你判断的分身。庖丁拆解你喜欢的人的内容，做成能干活、能落地的技能。你不需要先会写 skill——把真实语料交给对应的一套。
@@ -112,8 +114,6 @@ claude plugin update amb-paoding@ambskill
 更新换的是宿主技能目录里的技能源码。蒸馏工程在你自己的 `<项目>-workspace/` 下，与技能目录是两个地方，语料、中间物和成品都不在更新范围内。
 
 ## ambskill 怎样工作
-
-![ambskill 两套工具](docs/ambskill-flow.svg)
 
 ambskill 本身不做调度：装哪套，那套自己跑完。下面是各自怎么炼。
 
