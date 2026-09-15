@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
   <title id="title">ambskill 两套工具</title>
-  <desc id="desc">课和访谈走北冥，炼成分身。同形态作品走庖丁，拆成写法。先做出 skill，再落地。</desc>
+  <desc id="desc">课和访谈走北冥，做 IP 分身。同形态作品走庖丁，拆解内容。北冥判断辅导，庖丁拆解干活。</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
       <path d="M0,0 L10,4 L0,8 Z" fill="#2563EB"/>
@@ -25,7 +25,7 @@
   <rect width="1280" height="520" fill="#FFFFFF"/>
   <rect x="48" y="36" width="6" height="28" rx="2" fill="#2563EB"/>
   <text class="eyebrow" x="68" y="57">AMBSKILL · 两套工具</text>
-  <text class="title" x="48" y="108">先做出 skill，再落地</text>
+  <text class="title" x="48" y="108">北冥判断辅导，庖丁拆解干活</text>
   <text class="subtitle" x="48" y="138">课走北冥，作品走庖丁。装哪套用哪套。</text>
 
   <g transform="translate(48,176)">
@@ -37,8 +37,8 @@
   <g transform="translate(388,176)">
     <rect class="node-strong" width="280" height="112" rx="16"/>
     <text class="index-inv" x="20" y="32">北冥</text>
-    <text class="label-inv" x="20" y="62">炼成分身</text>
-    <text class="body-inv" x="20" y="88">按他的方法判断、做事</text>
+    <text class="label-inv" x="20" y="62">做 IP 分身</text>
+    <text class="body-inv" x="20" y="88">用来判断、辅导</text>
   </g>
   <g transform="translate(728,176)">
     <rect class="node" width="504" height="112" rx="16"/>
@@ -58,13 +58,13 @@
   <g transform="translate(388,324)">
     <rect class="node-strong" width="280" height="112" rx="16"/>
     <text class="index-inv" x="20" y="32">庖丁</text>
-    <text class="label-inv" x="20" y="62">拆成写法</text>
-    <text class="body-inv" x="20" y="88">按那个路数写出一条</text>
+    <text class="label-inv" x="20" y="62">拆解内容</text>
+    <text class="body-inv" x="20" y="88">用来干活、落地</text>
   </g>
   <g transform="translate(728,324)">
     <rect class="node" width="504" height="112" rx="16"/>
     <text class="index" x="20" y="32">拿走</text>
-    <text class="label" x="20" y="62">每类一个写作技能 + 路由器</text>
+    <text class="label" x="20" y="62">每类一个能干活的技能 + 路由器</text>
     <text class="body" x="20" y="88">事实是你的。要把课炼成判断，去北冥。</text>
   </g>
   <path class="line" d="M328,380 H388"/>
