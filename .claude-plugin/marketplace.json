@@ -5,8 +5,8 @@
     "url": "https://github.com/agentmubai"
   },
   "metadata": {
-    "description": "agentmubai 的 Agent 技能集合。当前收录 amb-beiming：把成批语料做成可溯源的技能工具箱。",
-    "version": "1.1.0"
+    "description": "agentmubai 的 Agent 技能集合。当前收录 amb-beiming：把成批语料做成可溯源的技能工具箱；amb-paoding：把一批作品拆成按路数替你写的写作技能。",
+    "version": "1.2.0"
   },
   "plugins": [
     {
@@ -27,6 +27,29 @@
         "skill-generation",
         "corpus-distillation",
         "knowledge-atoms",
+        "agent-skills",
+        "chinese"
+      ]
+    },
+    {
+      "name": "amb-paoding",
+      "description": "把对方的作品（朋友圈、短视频转写、直播实录、课程、公众号）拆成写作技能：同一形态内按结构聚类型，每个类型一份写法书（他怎么看事、每段明面写什么暗地要达成什么凭什么、句式、范文原文、气口）和一个「像他站在旁边替你写一条」的技能，加一个路由器。事实不搬，每条引文可回到原件原文。也用于给已交付的写作技能箱补新作品。",
+      "source": "./skills/amb-paoding",
+      "strict": false,
+      "version": "1.0.0",
+      "author": {
+        "name": "agentmubai",
+        "url": "https://github.com/agentmubai"
+      },
+      "homepage": "https://github.com/agentmubai/ambskill",
+      "repository": "https://github.com/agentmubai/ambskill",
+      "license": "CC-BY-NC-4.0",
+      "category": "distill",
+      "keywords": [
+        "skill-generation",
+        "writing-style",
+        "pattern-extraction",
+        "copywriting",
         "agent-skills",
         "chinese"
       ]
