@@ -5,7 +5,7 @@
     "url": "https://github.com/agentmubai"
   },
   "metadata": {
-    "description": "agentmubai 的 Agent 技能集合。当前收录 amb-beiming：把成批语料做成可溯源的技能工具箱；amb-paoding：把一批作品拆成按路数替你写的写作技能。",
+    "description": "课炼成分身，作品拆成写法。北冥 amb-beiming：课程与访谈 → IP 分身。庖丁 amb-paoding：一批同形态作品 → 写作技能。引文逐字可溯源。",
     "version": "1.2.0"
   },
   "plugins": [
