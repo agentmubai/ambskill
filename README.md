@@ -1,4 +1,4 @@
-<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 开篇引用句 / 徽章 / 作者句；对照表在图下方；② 「解决什么问题」一段人话 + 处境表；能力一览只两行（一套一行）；③ 导航行末尾加技能说明链接；④ 「快速开始」加一个二级标题；⑤ 「能力一览」加行；⑥ 「怎样工作」加一个二级标题写机制；⑦ 「已知限制」加一组；⑧ 「项目结构」树里 skills/ 下加目录；⑨ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑩ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑪ AGENTS.md 公开技能列表；⑫ GitHub About。其余各节不动。 -->
+<!-- 维护者：再加一套 skill 时需要改的地方 —— ① 开篇引用句 / 徽章 / 作者句；图是两条线，不再叠对照表；② 「解决什么问题」一段人话 + 处境表；能力一览只两行（一套一行）；③ 导航行末尾加技能说明链接；④ 「快速开始」加一个二级标题；⑤ 「能力一览」加行；⑥ 「怎样工作」加一个二级标题写机制；⑦ 「已知限制」加一组；⑧ 「项目结构」树里 skills/ 下加目录；⑨ 「安装」加 --skill 一行与 claude plugin install / update 各一行；⑩ .claude-plugin/marketplace.json 加 plugin 条目并改 metadata.description；⑪ AGENTS.md 公开技能列表；⑫ GitHub About。其余各节不动。 -->
 
 # ambskill
 
@@ -13,16 +13,7 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 [解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
 
-![ambskill 炼 skill 再落地](docs/ambskill-flow.svg)
-
-| | 北冥 `amb-beiming` | 庖丁 `amb-paoding` |
-| --- | --- | --- |
-| 干什么 | 把一个人炼成能替他判断、做事的分身 | 从一批作品里抽出稳定结构，按那个路数写出一条 |
-| 最好喂 | 课程回放、访谈；有对得上的作品更好 | 大量同形态作品：朋友圈、短视频、直播、公众号 |
-| 别喂这个 | 只有文案、没有方法论 | 要把课炼成判断系统——那是北冥的事 |
-| 你拿走 | 一组任务技能 + 路由器 | 每类一个写作技能 + 路由器 |
-
-装哪套用哪套。同一人、课和作品都有：现在分开炼。
+![ambskill 两套工具](docs/ambskill-flow.svg)
 
 ## ambskill 解决什么问题
 

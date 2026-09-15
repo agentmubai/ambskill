@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 680" role="img" aria-labelledby="title desc">
-  <title id="title">ambskill 炼 skill 再落地</title>
-  <desc id="desc">先投喂真实语料，再选北冥或庖丁炼出自己的 skill，最后用它把业务、内容和行动落地。一次只炼一条线。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" role="img" aria-labelledby="title desc">
+  <title id="title">ambskill 两套工具</title>
+  <desc id="desc">课和访谈走北冥，炼成分身。同形态作品走庖丁，拆成写法。先做出 skill，再落地。</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
       <path d="M0,0 L10,4 L0,8 Z" fill="#2563EB"/>
@@ -9,80 +9,66 @@
       text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
       .eyebrow { font-size: 16px; font-weight: 700; letter-spacing: 1.8px; fill: #2563EB; }
       .title { font-size: 34px; font-weight: 700; fill: #0F172A; }
-      .subtitle { font-size: 17px; font-weight: 400; fill: #64748B; }
+      .subtitle { font-size: 17px; fill: #64748B; }
       .index { font-size: 13px; font-weight: 700; fill: #94A3B8; }
-      .index-inverse { font-size: 13px; font-weight: 700; fill: #BFDBFE; }
+      .index-inv { font-size: 13px; font-weight: 700; fill: #BFDBFE; }
       .label { font-size: 20px; font-weight: 700; fill: #0F172A; }
-      .label-inverse { font-size: 20px; font-weight: 700; fill: #FFFFFF; }
-      .body { font-size: 15px; font-weight: 400; fill: #64748B; }
-      .body-inverse { font-size: 15px; font-weight: 400; fill: #DBEAFE; }
-      .condition { font-size: 15px; font-weight: 700; fill: #2563EB; }
+      .label-inv { font-size: 20px; font-weight: 700; fill: #FFFFFF; }
+      .body { font-size: 15px; fill: #64748B; }
+      .body-inv { font-size: 15px; fill: #DBEAFE; }
       .node { fill: #FFFFFF; stroke: #CBD5E1; stroke-width: 1.5; }
-      .node-strong { fill: #2563EB; stroke: #2563EB; stroke-width: 1.5; }
-      .line { fill: none; stroke: #2563EB; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
-      .rail { fill: none; stroke: #93C5FD; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+      .node-strong { fill: #2563EB; stroke: #2563EB; }
+      .line { fill: none; stroke: #2563EB; stroke-width: 2.5; stroke-linecap: round; marker-end: url(#arrow); }
       .footer { font-size: 15px; font-weight: 600; fill: #334155; }
     </style>
   </defs>
-  <rect width="1280" height="680" fill="#FFFFFF"/>
-  <rect x="48" y="40" width="6" height="28" rx="2" fill="#2563EB"/>
-  <text class="eyebrow" x="68" y="61">AMBSKILL · 炼 skill 再落地</text>
-  <text class="title" x="48" y="112">一次只炼一条线</text>
-  <text class="subtitle" x="48" y="142">课和访谈走北冥，同形态作品走庖丁。先做出自己的 skill，再用它落地。</text>
+  <rect width="1280" height="520" fill="#FFFFFF"/>
+  <rect x="48" y="36" width="6" height="28" rx="2" fill="#2563EB"/>
+  <text class="eyebrow" x="68" y="57">AMBSKILL · 两套工具</text>
+  <text class="title" x="48" y="108">先做出 skill，再落地</text>
+  <text class="subtitle" x="48" y="138">课走北冥，作品走庖丁。装哪套用哪套。</text>
+
   <g transform="translate(48,176)">
-    <rect class="node" x="0" y="0" width="260" height="128" rx="16"/>
-    <text class="index" x="20" y="32">01 · FEED</text>
-    <text class="label" x="20" y="64">真实语料</text>
-    <text class="body" x="20" y="92">课程、访谈，或一批作品</text>
+    <rect class="node" width="280" height="112" rx="16"/>
+    <text class="index" x="20" y="32">喂</text>
+    <text class="label" x="20" y="62">课程、访谈</text>
+    <text class="body" x="20" y="88">方法论在里面</text>
   </g>
-  <g transform="translate(348,176)">
-    <rect class="node-strong" x="0" y="0" width="260" height="128" rx="16"/>
-    <text class="index-inverse" x="20" y="32">02 · CHOOSE</text>
-    <text class="label-inverse" x="20" y="64">选北冥或庖丁</text>
-    <text class="body-inverse" x="20" y="92">判断分身，或拆出写法</text>
+  <g transform="translate(388,176)">
+    <rect class="node-strong" width="280" height="112" rx="16"/>
+    <text class="index-inv" x="20" y="32">北冥</text>
+    <text class="label-inv" x="20" y="62">炼成分身</text>
+    <text class="body-inv" x="20" y="88">按他的方法判断、做事</text>
   </g>
-  <g transform="translate(648,176)">
-    <rect class="node" x="0" y="0" width="260" height="128" rx="16"/>
-    <text class="index" x="20" y="32">03 · DISTILL</text>
-    <text class="label" x="20" y="64">炼成自己的 skill</text>
-    <text class="body" x="20" y="92">引文逐字核，改写进不了下一步</text>
+  <g transform="translate(728,176)">
+    <rect class="node" width="504" height="112" rx="16"/>
+    <text class="index" x="20" y="32">拿走</text>
+    <text class="label" x="20" y="62">一组任务技能 + 路由器</text>
+    <text class="body" x="20" y="88">引文逐字可溯源。只有文案、没有课，别走这里。</text>
   </g>
-  <g transform="translate(948,176)">
-    <rect class="node" x="0" y="0" width="284" height="128" rx="16"/>
-    <text class="index" x="20" y="32">04 · LAND</text>
-    <text class="label" x="20" y="64">用 AI 落地</text>
-    <text class="body" x="20" y="92">判断、成稿、下一步</text>
+  <path class="line" d="M328,232 H388"/>
+  <path class="line" d="M668,232 H728"/>
+
+  <g transform="translate(48,324)">
+    <rect class="node" width="280" height="112" rx="16"/>
+    <text class="index" x="20" y="32">喂</text>
+    <text class="label" x="20" y="62">朋友圈、口播、公众号</text>
+    <text class="body" x="20" y="88">一批同形态作品</text>
   </g>
-  <path class="line" d="M308,240 H348"/>
-  <path class="line" d="M608,240 H648"/>
-  <path class="line" d="M908,240 H948"/>
-  <text class="condition" x="48" y="352">你带着什么来</text>
-  <path class="rail" d="M178,304 V372"/>
-  <path class="rail" d="M178,372 H640"/>
-  <path class="rail" d="M178,372 H1108"/>
-  <path class="line" d="M178,372 V400"/>
-  <path class="line" d="M640,372 V400"/>
-  <path class="line" d="M1108,372 V400"/>
-  <g transform="translate(48,400)">
-    <rect class="node" x="0" y="0" width="260" height="148" rx="16"/>
-    <text class="condition" x="20" y="32">课、访谈、方法论</text>
-    <text class="label" x="20" y="64">走北冥</text>
-    <text class="body" x="20" y="92">炼成能替他判断、做事的分身</text>
-    <text class="body" x="20" y="116">新课来了，只改受影响的部分</text>
+  <g transform="translate(388,324)">
+    <rect class="node-strong" width="280" height="112" rx="16"/>
+    <text class="index-inv" x="20" y="32">庖丁</text>
+    <text class="label-inv" x="20" y="62">拆成写法</text>
+    <text class="body-inv" x="20" y="88">按那个路数写出一条</text>
   </g>
-  <g transform="translate(510,400)">
-    <rect class="node" x="0" y="0" width="260" height="148" rx="16"/>
-    <text class="condition" x="20" y="32">一批同形态作品</text>
-    <text class="label" x="20" y="64">走庖丁</text>
-    <text class="body" x="20" y="92">抽出稳定结构，按那个路数写</text>
-    <text class="body" x="20" y="116">事实是你的，人名数字不搬</text>
+  <g transform="translate(728,324)">
+    <rect class="node" width="504" height="112" rx="16"/>
+    <text class="index" x="20" y="32">拿走</text>
+    <text class="label" x="20" y="62">每类一个写作技能 + 路由器</text>
+    <text class="body" x="20" y="88">事实是你的。要把课炼成判断，去北冥。</text>
   </g>
-  <g transform="translate(972,400)">
-    <rect class="node" x="0" y="0" width="260" height="148" rx="16"/>
-    <text class="condition" x="20" y="32">同一人，两种都有</text>
-    <text class="label" x="20" y="64">现在分开炼</text>
-    <text class="body" x="20" y="92">课进北冥，作品进庖丁</text>
-    <text class="body" x="20" y="116">提取不合跑，合了是四不像</text>
-  </g>
-  <text class="footer" x="48" y="588">原则：一次只炼一条线。装哪套用哪套。先做出 skill，再拿去落地。</text>
+  <path class="line" d="M328,380 H388"/>
+  <path class="line" d="M668,380 H728"/>
+
+  <text class="footer" x="48" y="480">同一人两种都有：现在分开炼。提取不合跑。</text>
 </svg>
