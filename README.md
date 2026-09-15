@@ -9,28 +9,26 @@
 
 **支持：Claude Code、Codex、Cursor、ZCode、Grok CLI、WorkBuddy，以及其他能读 `SKILL.md` 的 Agent。**
 
-ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套他自己在用的技能：北冥把课炼成分身，庖丁把作品拆成写法。每句原话由脚本逐字核过，改写过的引文进不了下一步。
+ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套他自己在用的技能：**北冥做 IP 分身，用来判断和辅导；庖丁拆解内容，用来干活和落地。** 每句原话由脚本逐字核过，改写过的引文进不了下一步。
 
 [解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
 
-![ambskill 两套工具](docs/ambskill-flow.svg)
-
 ## ambskill 解决什么问题
 
-你不需要先会写 skill，也不需要读完几十小时的课。把真实语料交给对应的一套：课和访谈走北冥，一批同形态作品走庖丁。
+北冥做 IP 分身：帮客户造自己的分身，或把你喜欢的老师、买过的课炼成能辅导你判断的分身。庖丁拆解你喜欢的人的内容，做成能干活、能落地的技能。你不需要先会写 skill——把真实语料交给对应的一套。
 
-| 真实处境 | 你会得到 |
-| --- | --- |
-| 讲了几十小时，方法都在课里，没人调得动 | 一套能按他的方法判断、做事的分身 |
-| 让模型学风格，出来像他，细节却是编的 | 每句原话能回到出处，改写过的进不了下一步 |
-| 新课录完了，不想整套推倒重来 | 只改受影响的部分 |
-| 收了一百条朋友圈、两百条口播，想按那个路数写 | 按结构拆出的写作技能：你给事实，它出成稿 |
-| 怕范文里的人名、数字、行业进自己的稿 | 事实不搬；缺的标〔待补〕，不编 |
-| 同一人，课和作品都有 | 现在分开炼：课进北冥，作品进庖丁 |
+| 真实处境 | 走哪套 | 你会得到 |
+| --- | --- | --- |
+| 自己是 IP，方法在课里，要一个能替自己判断的分身 | 北冥 | IP 分身，用来判断、辅导 |
+| 喜欢某个老师、买过他的课，想炼成帮你学习落地的分身 | 北冥 | 老师的 IP 分身 |
+| 收了一批喜欢的人的朋友圈、口播，想按那个路数干活 | 庖丁 | 能出成稿、能落地的技能 |
+| 怕把对方的人名、数字、行业搬进自己的稿 | 庖丁 | 事实不搬；缺的标〔待补〕，不编 |
+| 让模型学风格，出来像他，细节却是编的 | 两套都是 | 每句原话能回到出处 |
+| 同一人，课和作品都有 | 两套分开 | 北冥管判断辅导，庖丁管拆解干活 |
 
 ## 快速开始
 
-### 北冥：给 IP 做分身
+### 北冥：做 IP 分身（判断、辅导）
 
 安装完成后，准备一个语料目录（子目录 = 一组材料，放 `.txt` / `.md` / `.srt` / `.vtt` 文本文件），在 Agent 里直接说：
 
@@ -44,12 +42,12 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 语料少于约 50 个文件、且总量不到 8 万字时，它会在预检报告里直说：读完手写一个技能更便宜。想自己一步步跑脚本，见 [amb-beiming 的完整说明](skills/amb-beiming/README.md)。
 
-### amb-paoding：作品 → 写作技能
+### 庖丁：拆解内容，用来干活
 
 准备一个作品目录（子目录 = 一组，最好一组一个形态或一个来源人；短视频、直播先转写成文本），在 Agent 里说：
 
 ```text
-用 amb-paoding 把 ~/对标口播转写 拆成写作技能，工程放 对标-paoding/。这是 <谁> 的短视频。
+用 amb-paoding 把 ~/对标口播转写 按他的路数做成能出一条的技能，工程放 对标-paoding/。这是 <谁> 的短视频。
 ```
 
 它会先盘点每种形态多少篇、够不够出技能，然后聚类型。你只出场一次：**看聚出来的类型卡，定名字与取舍**。之后写法书、技能、路由器、对裸模型的轻验收都由它跑完，交付一个自包含的成品箱。
@@ -60,8 +58,8 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 | 工作目标 | 主要入口 | 常见产出 |
 | --- | --- | --- |
-| 给 IP 做分身：按他的方法判断、做事 | 北冥 `amb-beiming` | 一组任务技能 + 路由器 |
-| 按这个人的路数写出一条 | 庖丁 `amb-paoding` | 每类一个写作技能 + 路由器 |
+| 做 IP 分身：判断、辅导、学习落地 | 北冥 `amb-beiming` | 一组任务技能 + 路由器 |
+| 拆解内容：干活、成稿、落地 | 庖丁 `amb-paoding` | 每类一个成稿技能 + 路由器 |
 
 ## 安装
 
@@ -81,7 +79,7 @@ npx -y skills add agentmubai/ambskill --skill amb-beiming
 npx -y skills add agentmubai/ambskill --skill amb-paoding
 ```
 
-WorkBuddy 用户把技能目录放到 `~/.workbuddy/skills/` 即可。两套都只要 Python 3.9+ 标准库。装好后新开会话，说「用北冥给这个 IP 做分身」或「用庖丁按这批作品的路数出一条」。
+WorkBuddy 用户把技能目录放到 `~/.workbuddy/skills/` 即可。两套都只要 Python 3.9+ 标准库。装好后新开会话，说「用北冥做 IP 分身」或「用庖丁拆这批内容来干活」。
 
 ### Claude Code 插件市场
 
@@ -115,7 +113,9 @@ claude plugin update amb-paoding@ambskill
 
 ## ambskill 怎样工作
 
-ambskill 本身不做调度：每套技能自包含，装哪套就用哪套，技能之间不互相依赖。下面先说 `amb-beiming` 的机制，再说 `amb-paoding`。
+![ambskill 两套工具](docs/ambskill-flow.svg)
+
+ambskill 本身不做调度：装哪套，那套自己跑完。下面是各自怎么炼。
 
 ### amb-beiming
 
@@ -142,7 +142,7 @@ ambskill 本身不做调度：每套技能自包含，装哪套就用哪套，�
 
 ### amb-paoding
 
-`amb-paoding` 把「作品变写作技能」拆成六段，门槛同样是产物在、脚本核过、输入哈希没变：
+`amb-paoding` 把「作品变成能干活的技能」拆成六段，门槛同样是产物在、脚本核过、输入哈希没变：
 
 ```text
 一批作品（朋友圈 / 短视频转写 / 直播实录 / 课程 / 公众号）
@@ -178,8 +178,8 @@ ambskill 本身不做调度：每套技能自包含，装哪套就用哪套，�
 ```text
 ambskill/
 ├── skills/
-│   ├── amb-beiming/        给 IP 做分身（SKILL.md + references + scripts + assets + evals）
-│   └── amb-paoding/        作品 → 写作技能（SKILL.md + references + scripts + assets）
+│   ├── amb-beiming/        IP 分身：判断、辅导（SKILL.md + references + scripts + assets + evals）
+│   └── amb-paoding/        拆解内容：干活、落地（SKILL.md + references + scripts + assets）
 ├── .claude-plugin/         Claude Code 插件市场定义
 ├── docs/                   README 里用到的图片（社群二维码）
 ├── README.md               本文件
