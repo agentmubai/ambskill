@@ -30,7 +30,7 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 ## 快速开始
 
-### amb-beiming：语料 → 任务技能工具箱
+### 北冥：给 IP 做分身
 
 安装完成后，准备一个语料目录（子目录 = 一组材料，放 `.txt` / `.md` / `.srt` / `.vtt` 文本文件），在 Agent 里直接说：
 
@@ -60,7 +60,7 @@ ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套�
 
 | 工作目标 | 主要入口 | 常见产出 |
 | --- | --- | --- |
-| 把课炼成能替他判断、做事的分身 | 北冥 `amb-beiming` | 一组任务技能 + 路由器 |
+| 给 IP 做分身：按他的方法判断、做事 | 北冥 `amb-beiming` | 一组任务技能 + 路由器 |
 | 按这个人的路数写出一条 | 庖丁 `amb-paoding` | 每类一个写作技能 + 路由器 |
 
 ## 安装
@@ -81,7 +81,7 @@ npx -y skills add agentmubai/ambskill --skill amb-beiming
 npx -y skills add agentmubai/ambskill --skill amb-paoding
 ```
 
-WorkBuddy 用户把技能目录放到 `~/.workbuddy/skills/` 即可。两套都只要 Python 3.9+ 标准库。装好后新开会话，说「用 amb-beiming 把这批语料做成技能工具箱」或「用 amb-paoding 把这批作品拆成写作技能」。
+WorkBuddy 用户把技能目录放到 `~/.workbuddy/skills/` 即可。两套都只要 Python 3.9+ 标准库。装好后新开会话，说「用北冥给这个 IP 做分身」或「用庖丁按这批作品的路数出一条」。
 
 ### Claude Code 插件市场
 
@@ -178,7 +178,7 @@ ambskill 本身不做调度：每套技能自包含，装哪套就用哪套，�
 ```text
 ambskill/
 ├── skills/
-│   ├── amb-beiming/        语料 → 技能工具箱（SKILL.md + references + scripts + assets + evals）
+│   ├── amb-beiming/        给 IP 做分身（SKILL.md + references + scripts + assets + evals）
 │   └── amb-paoding/        作品 → 写作技能（SKILL.md + references + scripts + assets）
 ├── .claude-plugin/         Claude Code 插件市场定义
 ├── docs/                   README 里用到的图片（社群二维码）
