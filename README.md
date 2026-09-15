@@ -4,6 +4,8 @@
 
 > 面向创业者与内容创作者的中文 AI Skills 工具箱。帮你做出自己更好用的 skill，把真实的业务、内容和行动用 AI 落地。
 
+![ambskill 两套工具](docs/ambskill-flow.svg)
+
 [![Version](https://img.shields.io/badge/version-1.2.0-2563EB.svg?style=flat-square)](.claude-plugin/marketplace.json)
 [![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-16A34A.svg?style=flat-square)](LICENSE)
 
@@ -12,8 +14,6 @@
 ambskill 由 [agent沐白](https://github.com/agentmubai) 创建。当前两套他自己在用的技能：**北冥做 IP 分身，用来判断和辅导；庖丁拆解内容，用来干活和落地。** 每句原话由脚本逐字核过，改写过的引文进不了下一步。
 
 [解决什么问题](#ambskill-解决什么问题) · [快速开始](#快速开始) · [能力一览](#能力一览) · [安装](#安装) · [怎样工作](#ambskill-怎样工作) · [已知限制](#已知限制) · [北冥说明](skills/amb-beiming/README.md) · [庖丁说明](skills/amb-paoding/README.md)
-
-![ambskill 两套工具](docs/ambskill-flow.svg)
 
 ## ambskill 解决什么问题
 
