@@ -2,6 +2,8 @@
 
 # ambskill
 
+agent沐白的商业落地技能。
+
 课炼成分身，作品拆成写法。
 
 两套开源 Agent 技能，[agent沐白](https://github.com/agentmubai) 自己在用。每句原话由脚本逐字核过——改写过的引文进不了下一步。
