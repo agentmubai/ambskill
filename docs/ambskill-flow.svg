@@ -26,10 +26,10 @@
   <rect x="48" y="36" width="6" height="28" rx="2" fill="#2563EB"/>
   <text class="eyebrow" x="68" y="57">AMBSKILL · 两套工具</text>
   <text class="title" x="48" y="108">北冥判断辅导，庖丁拆解干活</text>
-  <text class="subtitle" x="48" y="138">课和访谈走北冥。朋友圈、口播、直播稿、文章走庖丁。</text>
+  <text class="subtitle" x="48" y="138">课和访谈走北冥。朋友圈、短视频、直播稿走庖丁。</text>
 
   <g transform="translate(48,176)">
-    <rect class="node" width="280" height="112" rx="16"/>
+    <rect class="node" width="300" height="112" rx="16"/>
     <text class="index" x="20" y="32">喂</text>
     <text class="label" x="20" y="62">课程、访谈</text>
     <text class="body" x="20" y="88">方法论在里面</text>
@@ -46,14 +46,14 @@
     <text class="label" x="20" y="62">一组任务技能 + 路由器</text>
     <text class="body" x="20" y="88">引文逐字可溯源。只有文案、没有课，别走这里。</text>
   </g>
-  <path class="line" d="M328,232 H388"/>
+  <path class="line" d="M348,232 H388"/>
   <path class="line" d="M668,232 H728"/>
 
   <g transform="translate(48,324)">
-    <rect class="node" width="280" height="112" rx="16"/>
+    <rect class="node" width="300" height="112" rx="16"/>
     <text class="index" x="20" y="32">喂</text>
-    <text class="label" x="20" y="62">朋友圈、口播</text>
-    <text class="label" x="20" y="88">直播稿、文章</text>
+    <text class="label" x="20" y="62">朋友圈、短视频、直播稿</text>
+    <text class="body" x="20" y="88">路数在里面</text>
   </g>
   <g transform="translate(388,324)">
     <rect class="node-strong" width="280" height="112" rx="16"/>
@@ -67,7 +67,7 @@
     <text class="label" x="20" y="62">每类一个能干活的技能 + 路由器</text>
     <text class="body" x="20" y="88">事实是你的。要把课炼成判断，去北冥。</text>
   </g>
-  <path class="line" d="M328,380 H388"/>
+  <path class="line" d="M348,380 H388"/>
   <path class="line" d="M668,380 H728"/>
 
   <text class="footer" x="48" y="480">装哪套用哪套。一次只炼一条线。</text>
