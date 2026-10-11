@@ -5,7 +5,7 @@
 import os, sys, io, re, json, time, hashlib, datetime, subprocess, string, shlex
 
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORIG_ID = r"o\d{2}_\d{3}"                       # 原件编号：o<组两位>_<文件三位>
+ORIG_ID = r"o\d{2}_\d{3,}"                      # 原件编号：o<组两位>_<文件号≥三位>；篇数过千时文件号自然到四位
 TEXT_EXT = (".txt", ".md", ".srt", ".vtt", ".text", ".markdown")
 FORMS = ("朋友圈", "短视频", "直播", "课程", "公众号", "文案", "其他")   # 形态枚举；survey 猜、--form 改
 LONG_FORMS = ("直播", "课程")                    # 长形态：一篇是一场 / 一节，篇数门槛放宽
