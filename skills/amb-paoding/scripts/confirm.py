@@ -2,7 +2,8 @@
 """P3 门槛：核 work/types/<形态>.json。使用者确认过的类型文件才算过；不过不许进 P4。
 用法：python3 confirm.py <形态>|all [--project P]
 查：confirmed_at 非空；每个类型 id 是 ASCII 短名且不重复；name / brief 非空；members 都是本形态存在的原件、且一篇只归一个类型；
-    本形态每篇要么在某类型里、要么在 unassigned 里带理由（不许悄悄漏掉）；薄类型（篇数 < 参考线）只提醒不拦——出不出技能由使用者定，写在 thin_ok。
+    本形态每篇要么在某类型里、要么在 unassigned 里带理由（不许悄悄漏掉），也不能两边都在；薄类型（篇数 < 参考线）只提醒不拦——出不出技能由使用者定，写在 thin_ok。
+    类型卡 work/docs/类型卡-<形态>.md 必须在（使用者是看它确认的），卡里带编号的原话逐字核。
 schema：
 {"form": "短视频", "confirmed_at": "2026-…", "user_note": "使用者原话",
  "types": [{"id": "hook", "name": "反常识开头", "brief": "一句话说这类怎么写", "members": ["o01_001", …], "thin_ok": false, "exemplar": false}],
@@ -58,6 +59,20 @@ def check(P, form, idx):
             errs.append(f"unassigned 里的 {m} 不是本形态原件")
         if not str(why).strip():
             errs.append(f"unassigned {m} 没写理由")
+    both = sorted(set(un) & set(seen_members))
+    if both:
+        errs.append(f"{len(both)} 篇既在类型里又在 unassigned：{','.join(f'{m}（{seen_members[m]}）' for m in both[:8])}——一篇只能有一个去处")
+    card = C.W(P, "docs", f"类型卡-{form}.md")
+    if not os.path.exists(card):
+        errs.append(f"类型卡 work/docs/类型卡-{form}.md 不在：使用者是看它确认的，缺卡不算确认（分块的写在合并那一步）")
+    else:
+        ctext = C.read_text(card)
+        bodies = C.load_bodies(P, sorted({i for _, i in C.quotes(ctext)}))
+        nq, bad = C.check_quotes(ctext, bodies)
+        for q, i, why in bad[:8]:
+            errs.append(f"类型卡引文「{q[:24]}」（{i}）：{why}")
+        if len(bad) > 8:
+            errs.append(f"类型卡另有 {len(bad) - 8} 条引文不符")
     missing = sorted(mine - set(seen_members) - set(un))
     if missing:
         errs.append(f"本形态有 {len(missing)} 篇既不在任何类型也不在 unassigned：{','.join(missing[:8])}{'…' if len(missing) > 8 else ''}")

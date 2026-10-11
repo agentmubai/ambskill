@@ -70,10 +70,11 @@ def main():
         print(f"分块 {len(outs)} 份 + 合并 1 份：")
         for x in outs + [merge]:
             print(" ", os.path.relpath(x, P))
-        print(f"先并发跑分块：paoding.py run {','.join(os.path.basename(x)[:-3] for x in outs)} --workers {len(outs)}；全部回来后 paoding.py run cluster-{form}-merge；再走 confirm。")
+        workers = min(len(outs), int(os.environ.get(C.ENV + "_WORKERS", "6")))   # 分块数可到几十，并发按额度定，不等于分块数
+        print(f"先并发跑分块：paoding.py run {','.join(os.path.basename(x)[:-3] for x in outs)} --workers {workers}；全部回来后 paoding.py run cluster-{form}-merge；再走 confirm。")
         C.pipeline_log(P, "P3", f"cluster {form} --parts {len(outs)}：{len(todo)} 篇")
         if C.agent_name() != "none":
-            import run_stage; run_stage.run(P, [os.path.basename(x)[:-3] for x in outs], workers=len(outs))
+            import run_stage; run_stage.run(P, [os.path.basename(x)[:-3] for x in outs], workers=workers)
             print(f"分块跑完。接着：paoding.py run cluster-{form}-merge")
         return
     exist_block = ""

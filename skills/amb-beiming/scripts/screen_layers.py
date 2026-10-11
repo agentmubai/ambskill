@@ -65,8 +65,8 @@ def main():
             x = byid[i]; o = re.sub(r"\s*\n\s*", " ", x["original"].strip()); g = G[i]; groups = set()
             for j, gj in G.items():
                 if j != i and len(g & gj) and len(g & gj) / max(1, min(len(g), len(gj))) >= 0.5:
-                    groups.add(j[1:3])
-            rep = len(groups - {i[1:3]})
+                    groups.add(C.id_group(j))
+            rep = len(groups - {C.id_group(i)})
             if not (ABS.search(o) or NUM.search(o)):
                 continue
             sc = (2 if x.get("type") in ("principle", "method") else 0) + (2 if x.get("claim_scope") == "无条件主张" else 0) + (2 if ABS.search(o) else 0) + min(rep, 3) + (1 if NUM.search(o) else 0) + (1 if x.get("confidence") == "high" else 0) - (3 if EX.search(o) else 0)

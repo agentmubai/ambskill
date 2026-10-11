@@ -57,6 +57,8 @@ def main():
                     C.die(f"来源 {s} 不认识（bare / new）")
                 slots = {"project": P, "role_block": role, "source": s, "key": key, "testset_dir": rel, "questions": qtext, "answer_out": f"{rel}/answers/{s}/{key}.md"}
                 outs.append(C.fill_prompt("evaluate-answer", slots, f"evaluate-answer-{ts}-{s}-{key}", P))
+        if "new" in srcs:   # 被测技能快照：report 前核它没在出答卷之后改过
+            C.record_stage(P, f"answers:{ts}", C.tree_files(new), extra={"skills_dir": os.path.relpath(new, P)})
         print(f"生成 {len(outs)} 份答题提示词（{','.join(srcs)} × {len(Q)}）。同一轮所有来源用同一个答题模型。")
         for x in outs:
             print(" ", os.path.relpath(x, P))
@@ -109,6 +111,11 @@ def main():
     for k in Q:
         if k not in key["tasks"] and k not in key.get("skipped", {}):
             problems.append(f"{k}：题集里有它，key.json 里没有（judge 后题集改过？重跑 judge）")
+    for k in keys + ["router"]:
+        if k not in Q:
+            problems.append(f"{k}：已确认的类型里有它，题集里没有（出题漏了；补题后重跑 answers → judge）")
+    if not key["tasks"]:
+        problems.append("盲评包为空：没有任何类型进入评分")
     for k, qmap in key["tasks"].items():
         for j in judges:
             fpath = os.path.join(sd, f"{k}-J{j}.md")

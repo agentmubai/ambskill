@@ -25,6 +25,11 @@ def main():
     tst = C.stage_state(P, f"tally:{ts}", C.tally_inputs(P, ts))
     if tst != "ok":
         C.die(f"tally:{ts} 的记录是 {tst}：" + {"stale": "评分文件 / key / 题集在 tally 之后改过，先重跑 `blind_eval tally`", "failed": "矩阵不完整（见 scores.json 的 problems），补齐后重跑 tally", "missing": "先跑 `blind_eval tally`"}.get(tst, ""))
+    ast = C.stage_state(P, f"answers:{ts}", C.tree_files(C.tested_skills_dir(P, ts)))
+    if ast == "stale":
+        C.die(f"被测技能在生成答题提示词之后改过：先 `beiming.py evaluate answers --testset {ts} --sources new` 重答、重评、重跑 tally，再出报告")
+    if ast == "missing":
+        print("提示：没有被测技能的快照（旧工程）；本次报告按现有技能记录，以后改了技能会过期")
     S = C.read_json(sj); rows = S["rows"]
     if not S.get("complete", False) or S.get("problems"):
         C.die("scores.json 标记矩阵不完整：\n" + "\n".join(f"- {p}" for p in S.get("problems", [])) + "\n不出判定；补齐后重跑 tally")
@@ -32,7 +37,8 @@ def main():
     qkind = {}
     for _tid, _qs in blind_eval.parse_questions(qp)[0].items():
         for _q, _k, _t in _qs:
-            qkind[_q] = _k
+            qkind[(_tid, _q)] = _k   # 题号可能在不同任务里重复（都从 Q1 起），只按题号会互相覆盖
+    need_kinds = ts == "常备"   # 只有常备题集出反转 / 近邻；泛化、暴力不出，缺了不算弱
     tasks = collections.OrderedDict(); srcs = []
     for r in rows:
         tasks.setdefault(r["task"], []).append(r)
@@ -52,7 +58,7 @@ def main():
         else:
             delta = tot[tgt] - tot[base]; dims = {d: mean([r["dims"][i] for r in tv]) for i, d in enumerate(C.DIMS)}
             def kind_dim(kinds, d):
-                v = [r["dims"][C.DIMS.index(d)] for r in tv if any(k in qkind.get(r["q"], "") for k in kinds)]; return mean(v) if v else None
+                v = [r["dims"][C.DIMS.index(d)] for r in tv if any(k in qkind.get((r["task"], r["q"]), "") for k in kinds)]; return mean(v) if v else None
             if tid == "router":
                 per_q = [mean([r["dims"][0] for r in tv if r["q"] == q]) for q in sorted({r["q"] for r in tv})]
                 verdict = "PASS" if all(x >= 4 for x in per_q) else ("FAIL" if any(x < 3 for x in per_q) else "WEAK"); why = f"各题方法选择 {', '.join(f'{x:.1f}' for x in per_q)}"
@@ -67,9 +73,11 @@ def main():
                 else:
                     if abs(delta) < 1: reasons.append(f"差距 {delta:.2f} < 1 不解读")
                     if dims["原法忠实"] < 3.5: reasons.append(f"原法忠实 {dims['原法忠实']:.2f} < 3.5")
-                    if flip is None: reasons.append("题集里没有反转题，该门槛未应用")
+                    if flip is None:
+                        if need_kinds: reasons.append("常备题集里本任务没有反转题，该门槛未应用")
                     elif flip < 3: reasons.append(f"反转题方法选择 {flip:.2f} < 3")
-                    if nb is None: reasons.append("题集里没有近邻题，该门槛未应用")
+                    if nb is None:
+                        if need_kinds: reasons.append("常备题集里本任务没有近邻题，该门槛未应用")
                     elif nb < 3: reasons.append(f"近邻题方法选择 {nb:.2f} < 3")
                     if dims["成品可用"] < 3: reasons.append(f"成品可用 {dims['成品可用']:.2f} < 3")
                     verdict = "WEAK" if reasons else "PASS"
@@ -83,7 +91,7 @@ def main():
     kinds = collections.defaultdict(list)
     for r in rows:
         if r["source"] == tgt:
-            kinds[qkind.get(r["q"], "?")].append(r)
+            kinds[qkind.get((r["task"], r["q"]), "?")].append(r)
     for k, v in kinds.items():
         L.append(f"| {k} | {mean([r['total'] for r in v]):.2f} | {mean([r['dims'][0] for r in v]):.2f} | {mean([r['dims'][1] for r in v]):.2f} |")
     lay = collections.Counter(r["layer"] for r in rows if r["source"] == tgt and r["total"] <= 18)

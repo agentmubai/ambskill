@@ -57,7 +57,7 @@ def main():
     C.write_json(C.W(P, "kb", "alias.json"), alias)
     # 来源索引
     cat = C.load_catalog(P) or {"groups": []}
-    per_g = collections.Counter(a["id"][1:3] for a in merged); per_gu = collections.Counter(u["unit_id"][1:3] for u in units)
+    per_g = collections.Counter(C.id_group(a["id"]) for a in merged); per_gu = collections.Counter(C.id_group(u["unit_id"]) for u in units)
     spk = collections.Counter((a.get("speaker", "未知"), a.get("role", "未知")) for a in merged)
     L = ["# 来源索引（merge 生成）", "", f"原子 {len(merged)}（去重前 {len(atoms)}，别名 {len(alias)}）| 单元 {len(units)} | 悬空引用 {len(dangling)}", "",
          "| 组 | 名称 | 形态 | 文件 | 原子 | 单元 |", "|---|---|---|---|---|---|"]

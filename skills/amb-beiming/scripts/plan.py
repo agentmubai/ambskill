@@ -31,7 +31,7 @@ def main():
     table("skills 标签（分池标签，不是最终任务）", cnt("skills", True), "标签")
     table("topics", cnt("topics", True), "主题")
     table("type", cnt("type"), "type"); table("role", cnt("role"), "role"); table("confidence", cnt("confidence"), "confidence"); table("claim_scope", cnt("claim_scope"), "claim_scope")
-    table("来源组", collections.Counter("g" + a["id"][1:3] for a in atoms), "组")
+    table("来源组", collections.Counter("g" + C.id_group(a["id"]) for a in atoms), "组")
     # 每个 skills 标签的质量画像
     L += ["## 每个 skills 标签的画像", "", "| 标签 | 原子 | 独占 | method+tool | high | case 原子 | 单元(case/work/sop/argument) | 主要来源组 |", "|---|---|---|---|---|---|---|---|"]
     tags = cnt("skills", True)
@@ -44,7 +44,7 @@ def main():
     for t, n in tags.most_common():
         sub = [a for a in atoms if t in (a.get("skills") or [])]
         L.append(f"| {t} | {n} | {sum(1 for a in sub if len(a.get('skills') or []) == 1)} | {sum(1 for a in sub if a.get('type') in ('method', 'tool'))} | {sum(1 for a in sub if a.get('confidence') == 'high')} | {sum(1 for a in sub if a.get('type') == 'case')} | "
-                 + "/".join(str(unit_tags[t].get(k, 0)) for k in ("case", "work", "sop", "argument")) + " | " + ",".join(k for k, _ in collections.Counter('g' + a['id'][1:3] for a in sub).most_common(3)) + " |")
+                 + "/".join(str(unit_tags[t].get(k, 0)) for k in ("case", "work", "sop", "argument")) + " | " + ",".join(k for k, _ in collections.Counter('g' + C.id_group(a['id']) for a in sub).most_common(3)) + " |")
     L += ["", "## skills × topics 交叉（前 40）", "", "| 标签 | 主题 | 条数 |", "|---|---|---|"]
     cross = collections.Counter((s, t) for a in atoms for s in (a.get("skills") or ["(空)"]) for t in (a.get("topics") or ["(空)"]))
     L += [f"| {s} | {t} | {n} |" for (s, t), n in cross.most_common(40)]

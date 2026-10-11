@@ -2,7 +2,8 @@
 """外部 CLI 并发驱动：把 work/prompts/<名>.md 各跑一次（PAODING_AGENT=codex|claude，或 PAODING_AGENT_CMD 自定义命令），回复写 work/reports/<名>.reply.md。
 用法：python3 run_stage.py <名1,名2,…> [--workers N] [--project P]   名 = 提示词文件名去掉 .md
 PAODING_AGENT 未设且没有 PAODING_AGENT_CMD：只列出提示词路径并退出（宿主子代理模式由执行 agent 自己派）。
-429 歇 120 秒重试最多 3 次；识别额度用尽即停止全部；读到 work/STOP 不再开新任务。回复不是产物，提示词指定的文件才是。"""
+429 歇 120 秒重试最多 3 次（最后一次失败不再睡）；识别额度用尽（含 402）或命令起不来即停止全部；读到 work/STOP 不再开新任务。回复不是产物，提示词指定的文件才是。
+有任何一份没跑成，打印重跑命令并以退出码 1 结束，调用它的 cluster / pattern / compose 等同样非 0。"""
 import os, sys, time, threading, queue
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import _core as C
@@ -33,23 +34,26 @@ def run(P, names, workers=6):
             except queue.Empty:
                 return
             name = os.path.basename(p)[:-3]; out = os.path.join(rdir, name + ".reply.md"); st = "failed"
-            for _ in range(3):
+            for attempt in range(3):
                 st, sec = C.run_prompt(p, out, log, P)
-                if st == "rate":
-                    time.sleep(120)
-                    if C.stop_requested(P):
-                        st = "stopped"; halt.set(); break
-                    continue
-                break
+                if st != "rate" or attempt == 2:
+                    break
+                time.sleep(120)
+                if C.stop_requested(P) or halt.is_set():
+                    st = "stopped"; halt.set(); break
             with lock:
                 results[name] = st; print(f"{st:7} {name}")
-            if st == "quota":
+            if st in ("quota", "broken"):
                 halt.set()
     ts = [threading.Thread(target=worker, daemon=True) for _ in range(max(1, workers))]
     [t.start() for t in ts]; [t.join() for t in ts]
     if halt.is_set():
-        print("已停止：" + ("收到 STOP" if C.stop_requested(P) else "额度用尽（quota）"))
+        print("已停止：" + ("收到 STOP" if C.stop_requested(P) else f"命令起不来（broken）：先修好 {C.ENV}_AGENT / {C.ENV}_AGENT_CMD" if "broken" in results.values() else f"额度用尽（quota）。换 {C.ENV}_AGENT 或等恢复后重跑未完成的提示词"))
     print(f"完成 {sum(1 for v in results.values() if v == 'ok')}/{len(paths)}；回复在 work/reports/<名>.reply.md；产物以提示词指定的文件为准，接着跑对应核验（confirm / check / lint / tally）")
+    undone = [n for n in names if results.get(n) != "ok"]
+    if undone:
+        print(f"未跑成 {len(undone)} 份（rc≠0 也可能已写出产物，先跑核验再决定重跑）。重跑：paoding.py run {','.join(undone)}")
+        sys.exit(1)
     return results
 
 if __name__ == "__main__":

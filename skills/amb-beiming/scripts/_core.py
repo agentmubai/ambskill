@@ -5,9 +5,14 @@
 import os, sys, io, re, json, glob, time, hashlib, datetime, subprocess, string, shlex
 
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ATOM_ID = r"c\d{2}_\d{3}_\d{3}"
-UNIT_ID = r"u\d{2}_\d{3}_\d{2,3}"
-ANY_ID = r"[cu]\d{2}_\d{3}_\d{2,3}"
+ATOM_ID = r"c\d{2,}_\d{3,}_\d{3,}"          # c<组号两位起>_<文件号三位起>_<序号三位起>：组过 99、文件过 999 时自然多一位
+UNIT_ID = r"u\d{2,}_\d{3,}_\d{2,}"
+ANY_ID = r"[cu]\d{2,}_\d{3,}_\d{2,}"
+
+def id_group(item_id):
+    """原子 / 单元 id 里的组号（不带 g）：c01_003_012 → 01，c100_003_012 → 100。不要用 id[1:3]，组号会过两位。
+    （与下面按 catalog 取组的 group_of(catalog, gid) 不同。）"""
+    return item_id[1:item_id.index("_")]
 TEXT_EXT = (".txt", ".md", ".srt", ".vtt", ".text", ".markdown")
 STATUS_UNFINISHED = ("pending", "in_progress", "failed", "interrupted")
 ORIGINAL_MAX = 200  # 原子 original 上限（字），与 extraction-rules.md 一致；settle 按它判
@@ -43,7 +48,13 @@ def parse_args(argv, opts=(), flags=(), usage=""):
 def project_root(explicit=None):
     """工程目录：--project > $BEIMING_PROJECT > 当前目录。工程的标志是 work/。"""
     p = explicit or os.environ.get("BEIMING_PROJECT") or os.getcwd()
-    return os.path.abspath(p)
+    return _refuse_skill_dir(os.path.abspath(p), "beiming.py")
+
+def _refuse_skill_dir(p, tool):
+    """技能目录本身或它的上层（比如仓库根）不是工程：在那里写 work/ 会污染技能源码或仓库。"""
+    if p == SKILL_DIR or SKILL_DIR.startswith(p.rstrip(os.sep) + os.sep):
+        die(f"{p} 是本技能目录或它的上层（比如仓库根），不是工程目录。到工程目录里运行，或加 --project <工程目录>（{tool} survey 会建好它）")
+    return p
 
 # ---------- 规则冻结 ----------
 FROZEN_RX = re.compile(r"(?m)^\s*(?:版本[：:]\s*)?冻结\s*(v[\d.]+)\s*$")
@@ -194,6 +205,8 @@ def layers_inputs(P, tid):
     return [os.path.join(pk, "layers.md"), os.path.join(pk, "cards.md"), W(P, "kb", "pools", tid, "atoms.jsonl")]
 
 def record_stage(P, stage, inputs, ok=True, extra=None):
+    if not os.path.isdir(W(P)):   # 没有 work/ 就不是工程：不替错目录建一个，否则记录会落到仓库根之类的地方
+        die(f"{P} 没有 work/，不是工程目录。到工程目录里运行或加 --project <工程目录>；新工程先 `beiming.py survey`")
     meta = read_json(W(P, "meta.json"), {})
     meta[stage] = {"at": now(), "ok": bool(ok), "inputs_sha": sha_files(inputs, P), **(extra or {})}
     write_json(W(P, "meta.json"), meta)
@@ -235,16 +248,28 @@ def stop_guard(P):
         die("work/STOP 存在：已收到停止指令，不派新任务、不生成新提示词。要继续先 `beiming.py recover`")
 
 # ---------- 成品体检的输入集合 ----------
+def tree_files(root):
+    """root 下全部文件（递归、排序；跳过 .DS_Store 与 __pycache__）。不存在就是空表。"""
+    out = []
+    for dp, dn, fn in os.walk(root) if os.path.isdir(root) else []:
+        dn[:] = sorted(d for d in dn if d != "__pycache__")
+        out += [os.path.join(dp, f) for f in sorted(fn) if f != ".DS_Store"]
+    return out
+
+def tested_skills_dir(P, ts):
+    """evaluate answers 记下的被测技能目录（--new）；没记过就是 work/draft/skills。"""
+    d = (read_json(W(P, "meta.json"), {}).get(f"answers:{ts}") or {}).get("skills_dir")
+    return os.path.join(P, d) if d else W(P, "draft", "skills")
+
 def skill_inputs(skills_dir, dirs):
-    """lint 记录的输入哈希覆盖 SKILL.md 与 references/ 下全部文件（status 用同一函数算，才能判 stale）。"""
+    """lint 记录的输入哈希覆盖 SKILL.md 与 references/、scripts/ 下全部文件（递归；status 用同一函数算，才能判 stale）。"""
     out = []
     for d in dirs:
         sk = os.path.join(skills_dir, d, "SKILL.md")
         if os.path.exists(sk):
             out.append(sk)
-        rd = os.path.join(skills_dir, d, "references")
-        if os.path.isdir(rd):
-            out += [os.path.join(rd, f) for f in sorted(os.listdir(rd))]
+        for sub in ("references", "scripts"):
+            out += tree_files(os.path.join(skills_dir, d, sub))
     return out
 
 def score_files(P, ts):
@@ -256,8 +281,10 @@ def tally_inputs(P, ts):
     return [W(P, "tests", ts, "key.json"), W(P, "tests", ts, "questions.md")] + score_files(P, ts)
 
 def eval_inputs(P, ts):
-    """evaluate:<题集> 记录的输入：scores.json + 题集 + key + tasks.json + 每份评分文件；任一改动，旧 PASS 过期。"""
-    return [W(P, "tests", ts, "scores.json"), W(P, "tests", ts, "questions.md"), W(P, "tests", ts, "key.json"), W(P, "tasks.json")] + score_files(P, ts)
+    """evaluate:<题集> 记录的输入：scores.json + 题集 + key + tasks.json + 每份评分文件 + 全部答卷 + 被测技能全部文件；
+    任一改动，旧 PASS 过期——改了技能就得重答 new、重评，不能拿旧答卷的分给新技能背书。"""
+    return ([W(P, "tests", ts, "scores.json"), W(P, "tests", ts, "questions.md"), W(P, "tests", ts, "key.json"), W(P, "tasks.json")]
+            + score_files(P, ts) + tree_files(W(P, "tests", ts, "answers")) + tree_files(tested_skills_dir(P, ts)))
 
 # ---------- 外部 CLI 适配 ----------
 def agent_name():
@@ -280,16 +307,20 @@ def agent_cmd(out_path):
         return ["claude", "-p", "--output-format", "text"]
     die(f"BEIMING_AGENT={a} 没有内置命令；设 BEIMING_AGENT_CMD（提示词从 stdin 进，输出到 stdout）")
 
+QUOTA_RE = r"usage limit|purchase more credits|quota exceeded|insufficient credits|out of credits|payment required|balance exhausted|insufficient balance|credit balance is too low"
+
 def classify_output(rc, tail):
     t = tail.lower()
-    if re.search(r"usage limit|purchase more credits|quota exceeded|insufficient credits|out of credits", t):
+    if rc == 127 and "[未能启动]" in tail:
+        return "broken"   # 命令不存在 / 不可执行：每一份都会一样失败
+    if re.search(QUOTA_RE, t):   # 含 grok 的「402 Payment Required … usage balance exhausted」
         return "quota"
     if rc != 0 and re.search(r"429|rate limit|too many requests|overloaded", t):
         return "rate"
     return "ok" if rc == 0 else "failed"
 
 def run_prompt(prompt_path, out_path, log_path, cwd):
-    """跑一份提示词。返回 (状态, 秒)。状态：ok / failed / quota / rate。"""
+    """跑一份提示词。返回 (状态, 秒)。状态：ok / failed / quota / rate / broken。"""
     t0 = time.time()
     cmd = agent_cmd(out_path)
     timeout = int(os.environ.get("BEIMING_AGENT_TIMEOUT", "1800"))  # 秒；一个挂住的 CLI 不能永久占住 worker
@@ -299,6 +330,8 @@ def run_prompt(prompt_path, out_path, log_path, cwd):
         rc, out = proc.returncode, (proc.stdout or "") + ("\n[stderr]\n" + proc.stderr if proc.stderr else "")
     except subprocess.TimeoutExpired as e:
         rc, out = 124, (e.stdout.decode("utf-8", "replace") if isinstance(e.stdout, bytes) else (e.stdout or "")) + f"\n[timeout] 超过 BEIMING_AGENT_TIMEOUT={timeout}s 被终止\n"
+    except OSError as e:   # 命令不存在 / 不可执行：不能在线程里抛掉，否则主进程照样显示「完成」
+        rc, out = 127, f"[未能启动] {cmd[0]}：{e}\n检查 BEIMING_AGENT / BEIMING_AGENT_CMD 指向的命令能在终端里直接运行\n"
     write_text(out_path, out)
     st = classify_output(rc, out[-2000:])
     with io.open(log_path, "a", encoding="utf-8") as f:

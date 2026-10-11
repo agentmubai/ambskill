@@ -24,7 +24,7 @@ description: 把对方的作品（朋友圈、短视频转写、直播实录、�
 | P1 盘点 | 哪几种形态、各多少篇、够不够 | 问使用者：作品目录、这是谁的、想拿它写什么 → `survey --corpus <目录> --project <项目>-paoding [--author gXX=某某] [--form gXX=形态]` → 抽读 3–5 篇看同构性 → 写 `work/docs/预检报告.md` | 无 | catalog 在；预检报告含 可开工 / 收缩 / 补料 | 01-survey.md |
 | P2 切篇 | 一篇一原件，零折损 | `ingest` | 无 | `kb/originals/index.jsonl` 在，ingest 记录 ok | 01-survey.md |
 | P3 聚类型 | 同形态内按结构聚 3–8 类 | 每形态：`cluster <形态>` → 派 → 你审草案 → **使用者看类型卡、定名与取舍** → 改成 `work/types/<形态>.json` 填 confirmed_at → `confirm <形态>` | 每形态 1 | confirm 记录 ok（confirmed_at 在、成员归属无漏无重） | 02-cluster.md |
-| P4 写法书 | 把那个人蒸出来：魂、暗线、结构、劲儿、每小段的明 / 暗 / 凭什么 / 术 / 例 / 气口 | 每类型：`pattern <形态-类型>` → 派 → `check <形态-类型>` → 不过的交回改 → 零引用篇 `dispose … --as 并入\|排除\|补拆` → 再 `check` 到 PASS → 把 `work/docs/写法书摘要-*.md` 给使用者瞄一眼（不设门） | 每类型 1 | check 记录 ok：七章齐、魂 ≥ 3 条且每条 ≥ 2 篇证据、三大段小段七行齐、引文与例块逐字 100%、零引用篇全部有处置 | 03-pattern.md |
+| P4 写法书 | 把那个人蒸出来：魂、暗线、结构、劲儿、每小段的明 / 暗 / 凭什么 / 术 / 例 / 气口 | 每类型：`pattern <形态-类型>` → 派 → `check <形态-类型>` → 不过的交回改 → 零引用篇 `dispose … --as 并入\|排除\|补拆` → 再 `check` 到 PASS → 把 `work/docs/写法书摘要-*.md` 给使用者瞄一眼（不设门） | 每类型 1 | check 记录 ok：八章齐、魂 ≥ 3 条且每条 ≥ 2 篇证据、三大段小段七行齐、引文与例块逐字 100%、零引用篇全部有处置 | 03-pattern.md |
 | P5 成技 | 每类型一技能 + 路由器 | `compose all` → 派 → `compose --router` → 派 → `lint` | 每类型 1 + 路由器 1 | lint 全 PASS | 04-compose.md、product-spec.md |
 | 轻验收 | 比裸模型强多少、弱在哪一件 | `evaluate questions` → 派 → `evaluate answers --sources bare,new` → 派 → `evaluate judge` → 派 ×2 → `evaluate tally` → `evaluate report`；写 `work/docs/验收说明.md` | 出题 1；每来源×类型 1；每类型 2 评委 | 矩阵完整、report 在；**不设通过线** | 05-evaluate.md |
 | 交付 | 自包含成品 | `deliver <箱名> [--dest 目录] [--no-kb]` | 无 | deliver 记录 ok（含成品体检） | 06-deliver-update.md |

@@ -21,7 +21,7 @@ def main():
     T = C.tasks(P); prefix = T["prefix"]; outs = []
     for tid in C.split_names(pos[0], [t["id"] for t in T["tasks"]]):
         t = C.task_by_id(P, tid); pool = C.W(P, "kb", "pools", tid, "atoms.jsonl"); C.need(pool, "repool（新料合并后重建任务池）")
-        new_ids = [x["id"] for x in C.read_jsonl(pool) if "_bad_json" not in x and ("g" + x["id"][1:3]) in groups]
+        new_ids = [x["id"] for x in C.read_jsonl(pool) if "_bad_json" not in x and ("g" + C.id_group(x["id"])) in groups]
         if not new_ids:
             print(f"{tid}: 新组里没有归到本任务的原子，跳过"); continue
         slots = {"project": P, "skill_dir": C.SKILL_DIR, "task": tid, "domain": t.get("domain", t.get("name", tid)), "pool_dir": os.path.relpath(os.path.dirname(pool), P),

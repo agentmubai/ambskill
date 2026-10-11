@@ -146,7 +146,8 @@ def digest_for_user(P, key, form, t, s, segs, bullets, members):
         L += ["", f"**他从不做的：** {ban.group(1).strip()}"]
     reader = C.chapter(s, "reader") or ""
     L += ["", "## 读者为什么会看、为什么会被种草", ""] + [("- " + re.sub(r"\s*[（(]" + C.ORIG_ID + r"[)）]", "", b).strip()) for b in re.findall(r"(?m)^- (.+)$", reader)]
-    L += ["", "## 这一类怎么排", "", "| 大段 | 小段 |", "|---|---|"] + [f"| {{'open': '开头', 'mid': '中间', 'close': '结尾'}}[big] if big else '?' | {n} {name} |".replace("{{", "{").replace("}}", "}") for n, name, _, big in segs]
+    big_name = {"open": "开头", "mid": "中间", "close": "结尾"}
+    L += ["", "## 这一类怎么排", "", "| 大段 | 小段 |", "|---|---|"] + [f"| {big_name.get(big, '?')} | {n} {name} |" for n, name, _, big in segs]
     L += ["", "如果你觉得哪一条「怎么看事」不像他，或者缺了一条，说一声：改写法书，不用重拆。"]
     out = C.W(P, "docs", f"写法书摘要-{key}.md"); C.write_text(out, "\n".join(L) + "\n")
     print(f"  给使用者看的摘要 → {os.path.relpath(out, P)}")

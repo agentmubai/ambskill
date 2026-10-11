@@ -32,7 +32,7 @@ def main():
         out = []
         for t in T["tasks"]:
             m = t.get("match", {})
-            if (set(a.get("skills") or []) & set(m.get("skills", []))) or (set(a.get("topics") or []) & set(m.get("topics", []))) or ("g" + a["id"][1:3] in m.get("groups", [])):
+            if (set(a.get("skills") or []) & set(m.get("skills", []))) or (set(a.get("topics") or []) & set(m.get("topics", []))) or ("g" + C.id_group(a["id"]) in m.get("groups", [])):
                 out.append(t["id"])
         return out
     pools = {t["id"]: {"atoms": [], "units": [], "copies": 0} for t in T["tasks"]}

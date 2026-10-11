@@ -77,6 +77,8 @@ def main():
                     role = f"你只读知识包 `work/kb/packs/{tid}/methods.md` 与 `cards.md`（不读任何 SKILL.md），凭知识包里的方法逐题回答。"
                 slots = {"project": P, "role_block": role, "source": s, "task": tid, "testset_dir": rel, "questions": qtext, "answer_out": f"{rel}/answers/{s}/{tid}.md"}
                 outs.append(C.fill_prompt("evaluate-answer", slots, f"evaluate-answer-{ts}-{s}-{tid}", P))
+        if "new" in srcs:   # 被测技能快照：report 前核它没在出答卷之后改过
+            C.record_stage(P, f"answers:{ts}", C.tree_files(new), extra={"skills_dir": os.path.relpath(new, P)})
         print(f"生成 {len(outs)} 份答题提示词（{','.join(srcs)} × {len(Q)} 任务）。同一轮所有来源用同一个答题模型。")
         for o in outs:
             print(" ", os.path.relpath(o, P))
@@ -119,6 +121,11 @@ def main():
     for tid in Q:
         if tid not in key["tasks"] and tid not in key.get("skipped", {}):
             problems.append(f"{tid}：题集里有它，key.json 里没有（judge 后题集改过？重跑 judge）")
+    for tid in [t["id"] for t in T["tasks"]] + ["router"]:
+        if tid not in Q:
+            problems.append(f"{tid}：tasks.json 里有它，题集里没有（出题漏了；补题后重跑 answers → judge）")
+    if not key["tasks"]:
+        problems.append("盲评包为空：没有任何任务进入评分")
     for tid, qmap in key["tasks"].items():
         for j in judges:
             fpath = os.path.join(sd, f"{tid}-J{j}.md")

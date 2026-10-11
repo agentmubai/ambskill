@@ -81,28 +81,36 @@ def main():
     if os.path.exists(C.W(P, "catalog.json")) and not (update or form_over or author_over):
         C.die("work/catalog.json 已存在。改形态用 --form，标来源人用 --author，加新料用 --update；要重来先删掉 work/catalog.json 与 work/kb/originals/")
     groups_raw, nontext = scan(corpus)
-    old_groups = {g["name"]: g for g in (old or {}).get("groups", [])}
+    # 编号终身不复用：删掉的组 / 文件留墓碑（removed_groups / removed_files），号只往前走（next_group / next_no）；
+    # 否则删一篇再加一篇，新文件会拿到旧号，ingest 又按号沿用旧原件，引文就挂到了别的篇上
+    old_groups = {g["name"]: g for g in (old or {}).get("groups", []) + (old or {}).get("removed_groups", [])}
     cat = {"corpus_root": corpus, "created": (old or {}).get("created") or C.now(), "updated": C.now(), "groups": [], "nontext": nontext}
     used = {g["group_id"] for g in old_groups.values()}
-    next_g = max([int(g[1:]) for g in used] + [0]) + 1
-    new_files = 0
+    next_g = max([int(g[1:]) for g in used] + [int((old or {}).get("next_group", 1)) - 1]) + 1
+    new_files = 0; seen = set()
     for name, d, files in groups_raw:
-        og = old_groups.get(name)
+        og = old_groups.get(name); seen.add(name)
+        old_files = (og or {}).get("files", []) + (og or {}).get("removed_files", [])
         if og:
-            gid = og["group_id"]; known = {x["file"]: x for x in og["files"]}; nxt = max([int(x["no"]) for x in og["files"]] + [0]) + 1
+            gid = og["group_id"]; known = {x["file"]: x for x in old_files}
+            nxt = max([int(x["no"]) for x in old_files] + [int(og.get("next_no", 1)) - 1]) + 1
         else:
             gid = "g%02d" % next_g; next_g += 1; known = {}; nxt = 1
         flist = []
         for fn in files:
             chars = len(C.norm_ws(C.read_text(os.path.join(d, fn))))
             if fn in known:
-                flist.append({**known[fn], "title": known[fn].get("title") or C.file_title(fn), "chars": chars})
+                k = {x: v for x, v in known[fn].items() if x != "removed"}
+                flist.append({**k, "title": k.get("title") or C.file_title(fn), "chars": chars})
             else:
                 flist.append({"no": "%03d" % nxt, "file": fn, "title": C.file_title(fn), "chars": chars, "added": C.now()[:10]}); nxt += 1; new_files += 1
+        removed = [{**x, "removed": x.get("removed") or C.now()[:10]} for x in old_files if x["file"] not in set(files)]
         form = form_over.get(gid) or (og or {}).get("form") or guess_form(name, flist)
         author = author_over.get(gid) or (og or {}).get("author") or "(未标)"
         cat["groups"].append({"group_id": gid, "name": name, "form": form, "author": author, "source_dir": d, "files": flist,
-                              "n_files": len(flist), "total_chars": sum(x["chars"] for x in flist)})
+                              "n_files": len(flist), "total_chars": sum(x["chars"] for x in flist), "next_no": nxt, "removed_files": removed})
+    cat["removed_groups"] = [{**g, "removed": g.get("removed") or C.now()[:10]} for nm, g in old_groups.items() if nm not in seen]
+    cat["next_group"] = next_g
     cat["total_files"] = sum(g["n_files"] for g in cat["groups"]); cat["total_chars"] = sum(g["total_chars"] for g in cat["groups"])
     C.write_json(C.W(P, "catalog.json"), cat)
     # 规模表：按形态汇总篇数，对着门槛说够不够

@@ -20,9 +20,14 @@ def main():
     tst = C.stage_state(P, f"tally:{ts}", C.tally_inputs(P, ts))
     if tst != "ok":
         C.die(f"tally:{ts} 的记录是 {tst}：" + {"stale": "评分 / key / 题集在 tally 之后改过，重跑 tally", "failed": "矩阵不完整（见 scores.json 的 problems）", "missing": "先跑 tally"}.get(tst, ""))
+    ast = C.stage_state(P, f"answers:{ts}", C.tree_files(C.tested_skills_dir(P, ts)))
+    if ast == "stale":
+        C.die(f"被测技能在生成答题提示词之后改过：先 `paoding.py evaluate answers --testset {ts} --sources new` 重答、重评、重跑 tally，再出报告")
+    if ast == "missing":
+        print("提示：没有被测技能的快照（旧工程）；本次报告按现有技能记录，以后改了技能会过期")
     S = C.read_json(sj); rows = S["rows"]
-    if not S.get("complete"):
-        C.die("scores.json 标记矩阵不完整，不出报告")
+    if not S.get("complete") or not rows:
+        C.die("scores.json 标记矩阵不完整或没有任何评分行，不出报告")
     import blind_eval
     qkind = {}
     for _k, _qs in blind_eval.parse_questions(os.path.join(TS, "questions.md"))[0].items():

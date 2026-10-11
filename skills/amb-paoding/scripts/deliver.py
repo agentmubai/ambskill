@@ -23,7 +23,10 @@ def main():
     if C.stage_state(P, "lint", C.skill_inputs(draft, dirs)) != "ok":
         C.die("成品体检未通过或已过期（SKILL.md 或 references 改过）：先 `paoding.py lint`")
     mj = C.read_json(C.W(P, "meta.json"), {})
-    evals = [k.split(":", 1)[1] for k, v in mj.items() if k.startswith("evaluate:") and v.get("ok")]
+    evals = [k.split(":", 1)[1] for k, v in mj.items() if k.startswith("evaluate:") and v.get("ok") and C.stage_state(P, k, C.eval_inputs(P, k.split(":", 1)[1])) == "ok"]
+    stale = [k for k, v in mj.items() if k.startswith("evaluate:") and v.get("ok") and k.split(":", 1)[1] not in evals]
+    if stale:
+        print(f"提示：{stale} 已过期（技能、答卷或评分在报告之后改过），成品 README 不引用它；要引用就重答 new、重评、重出报告")
     if not evals:
         print("提醒：没有任何轻验收报告。可以交付，但成品 README 会写明「未对裸模型盲评」。")
     out = dest or os.path.join(P, "product", box)

@@ -3,7 +3,8 @@
 用法：python3 run_stage.py <名1,名2,…> [--workers N] [--project P]   名 = 提示词文件名去掉 .md
 BEIMING_AGENT 未设且没有 BEIMING_AGENT_CMD：只列出提示词路径并退出（宿主子代理模式由执行 agent 自己派）。
 只设 BEIMING_AGENT_CMD 也生效（视为 custom）。
-429 歇 120 秒重试最多 3 次，睡醒后先看 work/STOP 再决定重试；识别额度用尽即停止全部；读到 work/STOP 不再开新任务。
+429 歇 120 秒重试最多 3 次（最后一次失败不再睡），睡醒后先看 work/STOP 与停止信号再决定重试；识别额度用尽（含 402）或命令起不来即停止全部；读到 work/STOP 不再开新任务。
+有任何一份没跑成，打印重跑命令并以退出码 1 结束，调用它的 extract / distill / compose 等同样非 0。
 每次调用在 work/reports/run.log 记一行；不做用量统计（各 CLI 自己的会话目录才有完整用量）。"""
 import os, sys, time, threading, queue
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -38,23 +39,26 @@ def run(P, names, workers=6):
             st = "failed"
             for attempt in range(3):
                 st, sec = C.run_prompt(p, out, log, P)
-                if st == "rate":
-                    time.sleep(120)
-                    if C.stop_requested(P):
-                        st = "stopped"; halt.set(); break
-                    continue
-                break
+                if st != "rate" or attempt == 2:
+                    break
+                time.sleep(120)
+                if C.stop_requested(P) or halt.is_set():
+                    st = "stopped"; halt.set(); break
             with lock:
                 results[name] = st
                 print(f"{st:7} {name}")
-            if st == "quota":
+            if st in ("quota", "broken"):
                 halt.set()
     ts = [threading.Thread(target=worker, daemon=True) for _ in range(max(1, workers))]
     [t.start() for t in ts]; [t.join() for t in ts]
     if halt.is_set():
-        print("已停止：" + ("收到 STOP" if C.stop_requested(P) else "额度用尽（quota）。换 BEIMING_AGENT 或等恢复后重跑未完成的提示词"))
+        print("已停止：" + ("收到 STOP" if C.stop_requested(P) else "命令起不来（broken）：先修好 BEIMING_AGENT / BEIMING_AGENT_CMD" if "broken" in results.values() else "额度用尽（quota）。换 BEIMING_AGENT 或等恢复后重跑未完成的提示词"))
     ok = sum(1 for v in results.values() if v == "ok")
     print(f"完成 {ok}/{len(paths)}；回复在 work/reports/<名>.reply.md；产物以提示词指定的文件为准，接着跑对应的核验（settle / check-layers / lint）")
+    undone = [n for n in names if results.get(n) != "ok"]
+    if undone:
+        print(f"未跑成 {len(undone)} 份（rc≠0 也可能已写出产物，先跑核验再决定重跑）。重跑：beiming.py run {','.join(undone)}")
+        sys.exit(1)
     return results
 
 if __name__ == "__main__":

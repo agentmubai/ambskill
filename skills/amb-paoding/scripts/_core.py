@@ -5,7 +5,7 @@
 import os, sys, io, re, json, time, hashlib, datetime, subprocess, string, shlex
 
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORIG_ID = r"o\d{2}_\d{3,}"                      # 原件编号：o<组两位>_<文件号≥三位>；篇数过千时文件号自然到四位
+ORIG_ID = r"o\d{2,}_\d{3,}"                     # 原件编号：o<组号两位起>_<文件号三位起>；组过 99、篇数过千时自然多一位
 TEXT_EXT = (".txt", ".md", ".srt", ".vtt", ".text", ".markdown")
 FORMS = ("朋友圈", "短视频", "直播", "课程", "公众号", "文案", "其他")   # 形态枚举；survey 猜、--form 改
 LONG_FORMS = ("直播", "课程")                    # 长形态：一篇是一场 / 一节，篇数门槛放宽
@@ -30,7 +30,7 @@ SOUL_THIN_PIECES = 5                            # 类型成员少于这个数，
 # 读者账五问：任何内容背后都要答——读者为什么停下来 / 我能帮他什么 / 他为什么要看这个 / 为什么看我的不看别人的 / 看完为什么被种草。check 查五问关键词。
 READER_QS = (("停", r"停下来|被吸引|停住|划走"), ("帮", r"帮他|帮到|能帮"), ("看这个", r"为什么要看|为什么看这个|想知道"), ("看我", r"看我的|不看别人|凭什么是我|为什么是我"), ("种草", r"种草|被说中|信了|想要|行动"))
 DEFAULT_PREFIX = "pd"
-ENV = "PAODING"                                 # 环境变量前缀：PAODING_PROJECT / PAODING_AGENT / PAODING_AGENT_CMD / PAODING_AGENT_TIMEOUT
+ENV = "PAODING"                                 # 环境变量前缀：PAODING_PROJECT / PAODING_AGENT / PAODING_AGENT_CMD / PAODING_AGENT_TIMEOUT / PAODING_WORKERS（分块聚类并发，默认 6）
 DISPOSITIONS = ("并入", "排除", "补拆")          # 零引用篇的处置枚举
 SPEAKER_RX = re.compile(r"^\s*(Speaker\s*\d+|说话人\s*\d*|发言人\s*\d*|\[?\d{1,2}:\d{2}(?::\d{2})?\]?)\b", re.I)
 
@@ -62,7 +62,13 @@ def need(path, hint):
 # ---------- 工程定位 ----------
 def project_root(explicit=None):
     """工程目录：--project > $PAODING_PROJECT > 当前目录。工程的标志是 work/。"""
-    return os.path.abspath(explicit or os.environ.get(ENV + "_PROJECT") or os.getcwd())
+    return _refuse_skill_dir(os.path.abspath(explicit or os.environ.get(ENV + "_PROJECT") or os.getcwd()), "paoding.py")
+
+def _refuse_skill_dir(p, tool):
+    """技能目录本身或它的上层（比如仓库根）不是工程：在那里写 work/ 会污染技能源码或仓库。"""
+    if p == SKILL_DIR or SKILL_DIR.startswith(p.rstrip(os.sep) + os.sep):
+        die(f"{p} 是本技能目录或它的上层（比如仓库根），不是工程目录。到工程目录里运行，或加 --project <工程目录>（{tool} survey 会建好它）")
+    return p
 
 def W(P, *parts):
     return os.path.join(P, "work", *parts)
@@ -303,6 +309,8 @@ def sha_files(paths, root=None):
     return h.hexdigest()[:16]
 
 def record_stage(P, stage, inputs, ok=True, extra=None):
+    if not os.path.isdir(W(P)):   # 没有 work/ 就不是工程：不替错目录建一个，否则记录会落到仓库根之类的地方
+        die(f"{P} 没有 work/，不是工程目录。到工程目录里运行或加 --project <工程目录>；新工程先 `paoding.py survey`")
     meta = read_json(W(P, "meta.json"), {})
     meta[stage] = {"at": now(), "ok": bool(ok), "inputs_sha": sha_files(inputs, P), **(extra or {})}
     write_json(W(P, "meta.json"), meta)
@@ -324,16 +332,28 @@ def pack_inputs(P, form, key):
     pk = pack_dir(P, key)
     return [os.path.join(pk, PATTERN), os.path.join(pk, "dispositions.json"), types_path(P, form)]
 
+def tree_files(root):
+    """root 下全部文件（递归、排序；跳过 .DS_Store 与 __pycache__）。不存在就是空表。"""
+    out = []
+    for dp, dn, fn in os.walk(root) if os.path.isdir(root) else []:
+        dn[:] = sorted(d for d in dn if d != "__pycache__")
+        out += [os.path.join(dp, f) for f in sorted(fn) if f != ".DS_Store"]
+    return out
+
+def tested_skills_dir(P, ts):
+    """evaluate answers 记下的被测技能目录（--new）；没记过就是 work/draft/skills。"""
+    d = (read_json(W(P, "meta.json"), {}).get(f"answers:{ts}") or {}).get("skills_dir")
+    return os.path.join(P, d) if d else W(P, "draft", "skills")
+
 def skill_inputs(skills_dir, dirs):
-    """lint 记录的输入：SKILL.md 与 references/ 下全部文件（含 originals/）。"""
+    """lint 记录的输入：SKILL.md 与 references/（含 originals/）、scripts/ 下全部文件。"""
     out = []
     for d in dirs:
         sk = os.path.join(skills_dir, d, "SKILL.md")
         if os.path.exists(sk):
             out.append(sk)
-        rd = os.path.join(skills_dir, d, "references")
-        for dp, dn, fn in os.walk(rd) if os.path.isdir(rd) else []:
-            out += [os.path.join(dp, f) for f in sorted(fn)]
+        for sub in ("references", "scripts"):
+            out += tree_files(os.path.join(skills_dir, d, sub))
     return out
 
 def score_files(P, ts):
@@ -344,7 +364,9 @@ def tally_inputs(P, ts):
     return [W(P, "tests", ts, "key.json"), W(P, "tests", ts, "questions.md")] + score_files(P, ts)
 
 def eval_inputs(P, ts):
-    return [W(P, "tests", ts, "scores.json"), W(P, "tests", ts, "questions.md"), W(P, "tests", ts, "key.json")] + score_files(P, ts)
+    """evaluate:<题集> 的输入：评分 + 题集 + key + 全部答卷 + 被测技能全部文件。改了技能，旧报告过期，交付不再引用它。"""
+    return ([W(P, "tests", ts, "scores.json"), W(P, "tests", ts, "questions.md"), W(P, "tests", ts, "key.json")]
+            + score_files(P, ts) + tree_files(W(P, "tests", ts, "answers")) + tree_files(tested_skills_dir(P, ts)))
 
 # ---------- 提示词 ----------
 class _Tpl(string.Template):
@@ -387,9 +409,13 @@ def agent_cmd(out_path):
         return ["claude", "-p", "--output-format", "text"]
     die(f"{ENV}_AGENT={a} 没有内置命令；设 {ENV}_AGENT_CMD（提示词从 stdin 进，输出到 stdout）")
 
+QUOTA_RE = r"usage limit|purchase more credits|quota exceeded|insufficient credits|out of credits|payment required|balance exhausted|insufficient balance|credit balance is too low"
+
 def classify_output(rc, tail):
     t = tail.lower()
-    if re.search(r"usage limit|purchase more credits|quota exceeded|insufficient credits|out of credits", t):
+    if rc == 127 and "[未能启动]" in tail:
+        return "broken"   # 命令不存在 / 不可执行：每一份都会一样失败
+    if re.search(QUOTA_RE, t):   # 含 grok 的「402 Payment Required … usage balance exhausted」
         return "quota"
     if rc != 0 and re.search(r"429|rate limit|too many requests|overloaded", t):
         return "rate"
@@ -404,6 +430,8 @@ def run_prompt(prompt_path, out_path, log_path, cwd):
         rc, out = proc.returncode, (proc.stdout or "") + ("\n[stderr]\n" + proc.stderr if proc.stderr else "")
     except subprocess.TimeoutExpired as e:
         rc, out = 124, (e.stdout.decode("utf-8", "replace") if isinstance(e.stdout, bytes) else (e.stdout or "")) + f"\n[timeout] 超过 {ENV}_AGENT_TIMEOUT={timeout}s 被终止\n"
+    except OSError as e:   # 命令不存在 / 不可执行：不能在线程里抛掉，否则主进程照样显示「完成」
+        rc, out = 127, f"[未能启动] {cmd[0]}：{e}\n检查 {ENV}_AGENT / {ENV}_AGENT_CMD 指向的命令能在终端里直接运行\n"
     write_text(out_path, out)
     st = classify_output(rc, out[-2000:])
     with io.open(log_path, "a", encoding="utf-8") as f:
