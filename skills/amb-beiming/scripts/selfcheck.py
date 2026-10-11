@@ -4,7 +4,7 @@
 检查项：
   1 死链       .md 里的相对链接都指向存在的文件
   2 外部路径   无本机绝对路径、无 workspace/ 引用（"<项目>-workspace/" 这种工程目录写法豁免）
-  3 禁词       无工程代号、无过程角色词、无虚构人名；层名不用"心法/公理"
+  3 禁词       无过程角色词、无虚构人名；层名不用"心法/公理"；客户 / 工程代号读本机私有名单（见 private_names，不进 Git）
   4 语料泄漏   --corpus 给定时，references/assets 的 .md 里不出现语料的 30 字连续片段（抽样：每 120 字取一个 30 字窗口，不是逐字全扫）
   5 槽位契约   assets/prompts/*.md 的每个 ${槽位} 至少有一个脚本填它，且填它的脚本里出现该槽位名（不核脚本多填的槽位）
   6 节序       references/01–09 按 目标与产出 → 动作 → 规则 → 依据 → 常见失误 排（模板节可选）
@@ -17,6 +17,15 @@ import _core as C
 
 BANNED = [r"[首二三四]炉", r"第[一二三四]炉", r"两炉", r"回炉", r"先例", r"炼成", r"炼器", r"练器", r"主代理", r"主会话", r"总控", r"北冥", r"mubaiskill",
           r"(?m)^#+\s*(心法|公理)", r"(心法|公理)层", r"(?<![\w-])workspace/", r"/Users/", r"/home/", r"[A-Za-z]:\\\\"]
+def private_names():
+    """真名不写进公开文件——写进禁词表本身就是泄漏。维护者把要拦的人名、代号放在不进 Git 的私有名单里，一行一个（# 开头是注释）：
+    默认是仓库根下 workspace 目录里的 仓库维护/私有禁词.txt，也可用环境变量 AMB_PRIVATE_NAMES 指定。没有这个文件就跳过（CI 上就是这样）。"""
+    p = os.environ.get("AMB_PRIVATE_NAMES") or os.path.join(C.SKILL_DIR, "..", "..", "workspace", "仓库维护", "私有禁词.txt")
+    if not os.path.isfile(p):
+        return []
+    return ["(?i)" + re.escape(l.strip()) for l in C.read_text(p).splitlines() if l.strip() and not l.lstrip().startswith("#")]
+
+BANNED += private_names()
 SECTIONS = ["目标与产出", "动作", "规则", "依据", "常见失误"]
 
 def main():
